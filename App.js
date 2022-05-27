@@ -8,13 +8,15 @@ import {
 export default function App() {
   const handleLogin = async () => {
     GoogleSignin.configure({
+      offlineAccess: true,
       webClientId:
         "950764784194-mt7u0qevqkfv232s7cd6vqqm22h14tag.apps.googleusercontent.com",
     });
+    console.log("as");
 
     const { idToken } = await GoogleSignin.signIn();
 
-    console.log(idToken);
+    console.log(idToken, "as");
 
     // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
