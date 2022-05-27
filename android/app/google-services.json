@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "950764784194-h615t64c2sd1b3s2n44uuvqr6mus72g4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.juniorbatista.bookhub",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
           "client_id": "950764784194-mt7u0qevqkfv232s7cd6vqqm22h14tag.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "950764784194-mt7u0qevqkfv232s7cd6vqqm22h14tag.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "950764784194-08ojpua1c292uqjfi5lcdqeslq22jf6o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.juniorbatista.bookhub"
+              }
             }
           ]
         }
