@@ -1,37 +1,48 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+
+import { StyleSheet, View } from "react-native";
+import WelcomeScreen from "@screens/WelcomeScreen/WelcomeScreen";
 import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from "@react-native-google-signin/google-signin";
-import auth from "@react-native-firebase/auth";
+  Jost_400Regular,
+  Jost_500Medium,
+  useFonts,
+} from "@expo-google-fonts/jost";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
-  const handleLogin = async () => {
-    GoogleSignin.configure();
-    console.log("asss");
+  let [fontsLoaded] = useFonts({
+    Jost_400Regular,
+    Jost_500Medium,
+  });
 
-    const { idToken } = await GoogleSignin.signIn();
+  const [appIsReady, setAppIsReady] = useState(false);
 
-    console.log(idToken, "as");
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
 
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      if (fontsLoaded) {
+        setAppIsReady(true);
+      }
+    }
 
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
-  };
+    prepare();
+  }, [fontsLoaded]);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start!!! working on your app!</Text>
-      <GoogleSigninButton
-        style={{ width: 192, height: 48 }}
-        size={GoogleSigninButton.Size.Wide}
-        color={GoogleSigninButton.Color.Dark}
-        onPress={handleLogin}
-      />
-
+    <View style={styles.container} onLayout={onLayoutRootView}>
+      <WelcomeScreen />
       <StatusBar style="auto" />
     </View>
   );
@@ -40,8 +51,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
