@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import LoginWithGoogle from "@components/LoginWithGoogle/LoginWithGoogle";
 import Leaves from "@res/icons/leaves.svg";
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Leaves width={226} height={346} />

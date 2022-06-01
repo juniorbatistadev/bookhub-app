@@ -12,10 +12,7 @@ GoogleSignin.configure({
 
 export default function LoginWithGoogle() {
   const handleClick = async () => {
-    console.log("trying as");
-
     const { idToken } = await GoogleSignin.signIn();
-    console.log(idToken);
     // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
     // Sign-in the user with the credential
@@ -39,7 +36,6 @@ export default function LoginWithGoogle() {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    // backgroundColor: "#fff",
     paddingHorizontal: 30,
     paddingVertical: 10,
     borderRadius: 4,
