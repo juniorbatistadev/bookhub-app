@@ -2,10 +2,24 @@ import React from "react";
 import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import RenderHtml from "react-native-render-html";
 import DefaultCover from "@res/images/defaultCover.png";
+import { useNavigation } from "@react-navigation/native";
 
 function BookResult({ title, authors, image, textSnippet, pages }) {
+  const navigation = useNavigation();
+
   const onPress = () => {
-    alert(`${title}`);
+    navigation.push("Home", {
+      screen: "AddBook",
+      params: {
+        book: {
+          title,
+          authors: authors ? [...authors] : null,
+          image,
+          textSnippet,
+          pages,
+        },
+      },
+    });
   };
 
   return (
@@ -28,34 +42,13 @@ function BookResult({ title, authors, image, textSnippet, pages }) {
             {authors ? `${authors.join("   ")} ` : "Unknown"}
           </Text>
           <Text style={styles.detailsPages}>{`${pages || 0} pages`} </Text>
-          {/* <RenderHtml
-          contentWidth={100}
-          source={{ html: textSnippet }}
-          tagsStyles={tagsStyles}
-        /> */}
-          <View style={styles.buttons}>
-            {/* <Text style={styles.addBook}>Save Book</Text> */}
-            {/* <Text style={styles.moreInfo}>More Info</Text> */}
-          </View>
+
+          <View style={styles.buttons}></View>
         </View>
       </View>
     </Pressable>
   );
 }
-
-const tagsStyles = {
-  body: {
-    marginTop: 10,
-    color: "#BFBFBF",
-    fontSize: 14,
-    fontFamily: "Jost_400Regular",
-  },
-  b: {
-    fontSize: 12,
-    color: "#6a6a6a",
-    fontFamily: "Jost_400Regular",
-  },
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -86,24 +79,7 @@ const styles = StyleSheet.create({
     fontFamily: "Jost_400Regular",
     marginTop: 5,
   },
-  buttons: {
-    marginTop: 20,
-    flexDirection: "row",
-  },
 
-  addBook: {
-    color: "#1F3D35",
-    fontFamily: "Jost_700Bold",
-    marginRight: 10,
-    fontSize: 14,
-  },
-
-  moreInfo: {
-    color: "#BFBFBF",
-    fontFamily: "Jost_700Bold",
-    marginRight: 10,
-    fontSize: 14,
-  },
   detailsPages: {
     fontSize: 15,
     fontFamily: "Jost_500Medium",

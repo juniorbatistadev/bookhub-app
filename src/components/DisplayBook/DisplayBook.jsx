@@ -1,18 +1,19 @@
 import React from "react";
 import { Text, View, Image, StyleSheet } from "react-native";
+import defaultCover from "@res/images/defaultCover.png";
 
-function DisplayBook({ title, author, image, pagesRead = 0, pagesTotal }) {
+function DisplayBook({ title, authors, image, pagesRead = 0, pagesTotal }) {
   return (
     <View style={styles.container}>
       <Image
         style={styles.cover}
-        source={{
-          uri: image,
-        }}
+        source={image ? { uri: image } : defaultCover}
       />
       <View style={styles.detailsContainer}>
         <Text style={styles.detailsTitle}>{title}</Text>
-        <Text style={styles.detailsAuthor}>{author}</Text>
+        <Text style={styles.detailsAuthor}>
+          {authors ? `${authors.join("   ")} ` : "Unknown"}
+        </Text>
         <Text style={styles.detailsPages}>
           {pagesRead === pagesTotal ? "Finished" : `${pagesRead}/${pagesTotal}`}
         </Text>

@@ -20,6 +20,10 @@ export default function AddButton() {
     });
   };
 
+  const onAdddManuallyBook = () => {
+    navigation.push("Home", { screen: "AddBook" });
+  };
+
   return (
     <View style={styles.container}>
       <Menu>
@@ -51,7 +55,7 @@ export default function AddButton() {
               color="black"
             />
           </MenuOption>
-          <MenuOption onSelect={() => alert(`Delete`)}>
+          <MenuOption onSelect={onAdddManuallyBook}>
             <Text style={styles.optionText}>Manually Add Book</Text>
             <MaterialCommunityIcons
               name="typewriter"

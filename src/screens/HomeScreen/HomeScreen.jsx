@@ -1,11 +1,11 @@
 import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from "react";
 import { Ionicons, Foundation } from "@expo/vector-icons";
 import LibraryScreen from "@screens/LibraryScreen/LibraryScreen";
 import SearchScreen from "@screens/SearchScreen/SearchScreen";
 import AccountScreen from "@screens/AccountScreen/AccountScreen";
 import AddButton from "@components/AddButton/AddButton";
+import AddNewBookScreen from "../AddNewBookScreen/AddNewBookScreen";
 
 export default function HomeScreen() {
   const Tab = createBottomTabNavigator();
@@ -52,6 +52,15 @@ export default function HomeScreen() {
             <Ionicons name="person" size={size} color={color} />
           ),
         }}
+      />
+      <Tab.Screen
+        options={{
+          headerTitle: "Add Book",
+          tabBarButton: () => null,
+        }}
+        name="AddBook"
+        component={AddNewBookScreen}
+        // options={{ tabBarLabel: "Add Book", headerTitle: "Add Book" }}
       />
     </Tab.Navigator>
   );
