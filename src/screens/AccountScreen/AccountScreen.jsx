@@ -4,11 +4,14 @@ import auth from "@react-native-firebase/auth";
 import { Pressable, Image, Button } from "react-native";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useColorScheme } from "react-native";
+import { getThemedStyles } from "../../themesStyles";
 
 export default function AccountScreen() {
   const { currentUser } = useContext(AuthContext);
+  const scheme = useColorScheme();
 
-  console.log(currentUser);
+  const { themedContainer } = getThemedStyles(scheme);
 
   const logOut = () => {
     auth()
@@ -17,7 +20,7 @@ export default function AccountScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themedContainer]}>
       <Image
         style={styles.avatar}
         source={{
@@ -36,7 +39,6 @@ export default function AccountScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -1,129 +1,75 @@
 import React from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { useColorScheme } from "react-native";
+import { colors, getThemedStyles, sizes } from "../../themesStyles";
+import { useEffect } from "react";
+import firestore from "@react-native-firebase/firestore";
+import { useState } from "react";
+import { ActivityIndicator } from "react-native";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+import defaultCover from "@res/images/defaultCover.png";
 
-function DisplayList({ name }) {
-  const data = [
-    {
-      title: "Love Does",
-      image:
-        "https://books.google.com/books/content?id=kRUz8yq4HJUC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73kPYNvNrcU8wD6W8aDCMgikdo6L1s2yUGkyZqWNVIHAQ2WXHnH4VE3NF487G7OzPefytHO7AA_JdkstPNBPFAI20fkhbAa2-FmKQ5pR5qB7aDpwEm09Uazmv_JQyVUcbPKFW87&source=gbs_api",
-      author: "Bob Goff",
-      pagesRead: 56,
-      pagesTotal: 130,
-    },
-    {
-      title: "Twilight",
-      image:
-        "https://books.google.com/books/content?id=lGjFtMRqp_YC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73SviBoBjlunaHh_JffCjUxSVgdw7fJvRI2QF28vuP_QkufJdoW6bQgDHgzKUEBBoaSjKzonRkpvJkm0WQzfKI0TjK5C_fTQ49c-Jw02smre7DI4OY6y7RSTn410-NneeepuSxk&source=gbs_api",
-      author: "Stephenie Meyer",
-      pagesRead: 0,
-      pagesTotal: 560,
-    },
-    {
-      title: "The Fault in Our Stars",
-      image:
-        "https://books.google.com/books/content?id=UzqVUdEtLDwC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE71NDPRZXxv4ZewxGyqfPWb5Llep27gNbNPrhoY4U8Noj1htIMgM-3xib122NPCyGTn2R76WYKO2CCmEg5LcIZ0DdP4prc1jKdMMkbu82pmuLO3ZRZ-2Na9G1IMnmHpmbtVKiRyd&source=gbs_api",
-      author: "John Green",
-      pagesRead: 322,
-      pagesTotal: 322,
-    },
-    {
-      title: "Love Does",
-      image:
-        "https://books.google.com/books/content?id=kRUz8yq4HJUC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73kPYNvNrcU8wD6W8aDCMgikdo6L1s2yUGkyZqWNVIHAQ2WXHnH4VE3NF487G7OzPefytHO7AA_JdkstPNBPFAI20fkhbAa2-FmKQ5pR5qB7aDpwEm09Uazmv_JQyVUcbPKFW87&source=gbs_api",
-      author: "Bob Goff",
-      pagesRead: 56,
-      pagesTotal: 130,
-    },
-    {
-      title: "Twilight",
-      image:
-        "https://books.google.com/books/content?id=lGjFtMRqp_YC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73SviBoBjlunaHh_JffCjUxSVgdw7fJvRI2QF28vuP_QkufJdoW6bQgDHgzKUEBBoaSjKzonRkpvJkm0WQzfKI0TjK5C_fTQ49c-Jw02smre7DI4OY6y7RSTn410-NneeepuSxk&source=gbs_api",
-      author: "Stephenie Meyer",
-      pagesRead: 0,
-      pagesTotal: 560,
-    },
-    {
-      title: "The Fault in Our Stars",
-      image:
-        "https://books.google.com/books/content?id=UzqVUdEtLDwC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE71NDPRZXxv4ZewxGyqfPWb5Llep27gNbNPrhoY4U8Noj1htIMgM-3xib122NPCyGTn2R76WYKO2CCmEg5LcIZ0DdP4prc1jKdMMkbu82pmuLO3ZRZ-2Na9G1IMnmHpmbtVKiRyd&source=gbs_api",
-      author: "John Green",
-      pagesRead: 322,
-      pagesTotal: 322,
-    },
-    {
-      title: "Love Does",
-      image:
-        "https://books.google.com/books/content?id=kRUz8yq4HJUC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73kPYNvNrcU8wD6W8aDCMgikdo6L1s2yUGkyZqWNVIHAQ2WXHnH4VE3NF487G7OzPefytHO7AA_JdkstPNBPFAI20fkhbAa2-FmKQ5pR5qB7aDpwEm09Uazmv_JQyVUcbPKFW87&source=gbs_api",
-      author: "Bob Goff",
-      pagesRead: 56,
-      pagesTotal: 130,
-    },
-    {
-      title: "Twilight",
-      image:
-        "https://books.google.com/books/content?id=lGjFtMRqp_YC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73SviBoBjlunaHh_JffCjUxSVgdw7fJvRI2QF28vuP_QkufJdoW6bQgDHgzKUEBBoaSjKzonRkpvJkm0WQzfKI0TjK5C_fTQ49c-Jw02smre7DI4OY6y7RSTn410-NneeepuSxk&source=gbs_api",
-      author: "Stephenie Meyer",
-      pagesRead: 0,
-      pagesTotal: 560,
-    },
-    {
-      title: "The Fault in Our Stars",
-      image:
-        "https://books.google.com/books/content?id=UzqVUdEtLDwC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE71NDPRZXxv4ZewxGyqfPWb5Llep27gNbNPrhoY4U8Noj1htIMgM-3xib122NPCyGTn2R76WYKO2CCmEg5LcIZ0DdP4prc1jKdMMkbu82pmuLO3ZRZ-2Na9G1IMnmHpmbtVKiRyd&source=gbs_api",
-      author: "John Green",
-      pagesRead: 322,
-      pagesTotal: 322,
-    },
-    {
-      title: "Love Does",
-      image:
-        "https://books.google.com/books/content?id=kRUz8yq4HJUC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73kPYNvNrcU8wD6W8aDCMgikdo6L1s2yUGkyZqWNVIHAQ2WXHnH4VE3NF487G7OzPefytHO7AA_JdkstPNBPFAI20fkhbAa2-FmKQ5pR5qB7aDpwEm09Uazmv_JQyVUcbPKFW87&source=gbs_api",
-      author: "Bob Goff",
-      pagesRead: 56,
-      pagesTotal: 130,
-    },
-    {
-      title: "Twilight",
-      image:
-        "https://books.google.com/books/content?id=lGjFtMRqp_YC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73SviBoBjlunaHh_JffCjUxSVgdw7fJvRI2QF28vuP_QkufJdoW6bQgDHgzKUEBBoaSjKzonRkpvJkm0WQzfKI0TjK5C_fTQ49c-Jw02smre7DI4OY6y7RSTn410-NneeepuSxk&source=gbs_api",
-      author: "Stephenie Meyer",
-      pagesRead: 0,
-      pagesTotal: 560,
-    },
-    {
-      title: "The Fault in Our Stars",
-      image:
-        "https://books.google.com/books/content?id=UzqVUdEtLDwC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE71NDPRZXxv4ZewxGyqfPWb5Llep27gNbNPrhoY4U8Noj1htIMgM-3xib122NPCyGTn2R76WYKO2CCmEg5LcIZ0DdP4prc1jKdMMkbu82pmuLO3ZRZ-2Na9G1IMnmHpmbtVKiRyd&source=gbs_api",
-      author: "John Green",
-      pagesRead: 322,
-      pagesTotal: 322,
-    },
-  ];
+function DisplayList({ name, id }) {
+  const [books, setBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const scheme = useColorScheme();
+  const { themedHeader } = getThemedStyles(scheme);
+  const { currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const getReadBooks = async () => {
+      await firestore()
+        .collection("Users")
+        .doc(currentUser.uid)
+        .collection("Books")
+        .where("isFinished", "==", true)
+        .limit(10)
+        .get()
+        .then((querySnapshot) => {
+          setBooks(querySnapshot.docs.map((doc) => doc.data()));
+          setIsLoading(false);
+        });
+    };
+
+    if (id === "readList") {
+      getReadBooks();
+    }
+  }, []);
 
   const renderItem = ({ item }) => (
     <Image
       style={styles.cover}
-      source={{
-        uri: item.image,
-      }}
+      source={item.cover ? { uri: item.cover } : defaultCover}
     />
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{name}</Text>
-        <AntDesign name="right" size={13} color="#1F3D35" />
+        <Text style={[{ ...styles.title, fontSize: sizes.m }, themedHeader]}>
+          {name}
+        </Text>
+        <AntDesign
+          name="right"
+          size={13}
+          style={styles.icon}
+          color={scheme === "dark" ? colors.white : colors.darkGreen}
+        />
       </View>
-      <FlatList
-        style={styles.list}
-        horizontal
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => item.title + index}
-      />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          style={styles.list}
+          horizontal
+          data={books}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => item.title + index}
+        />
+      )}
     </View>
   );
 }
@@ -148,9 +94,12 @@ const styles = StyleSheet.create({
     fontFamily: "Jost_700Bold",
   },
   cover: {
-    width: 80,
-    height: 120,
+    width: 70,
+    height: 110,
     marginRight: 10,
+  },
+  icon: {
+    marginLeft: 10,
   },
 });
 

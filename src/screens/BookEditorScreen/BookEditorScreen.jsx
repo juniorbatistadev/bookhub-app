@@ -22,6 +22,9 @@ import {
 } from "react-native-pell-rich-editor";
 import * as Yup from "yup";
 import { useEffect } from "react";
+import { useColorScheme } from "react-native";
+import { colors, getThemedStyles } from "../../themesStyles";
+import Checkbox from "expo-checkbox";
 
 const BookSchema = Yup.object().shape({
   title: Yup.string().required("Please provide a title").max(500),
@@ -35,6 +38,8 @@ const BookSchema = Yup.object().shape({
 export default function BookEditorScreen({ route, navigation }) {
   const { currentUser } = useContext(AuthContext);
   const editorRef = useRef();
+  const scheme = useColorScheme();
+  const { themedContainer, themedText } = getThemedStyles(scheme);
 
   const book = route?.params?.book;
 
@@ -45,6 +50,8 @@ export default function BookEditorScreen({ route, navigation }) {
   }, []);
 
   const onPress = (values) => {
+    console.log(values);
+
     const { authors } = values;
     const authorsFormatted = authors.split(",");
 
@@ -65,8 +72,9 @@ export default function BookEditorScreen({ route, navigation }) {
     const data = {
       ...values,
       totalPages: Number.parseInt(values.totalPages || 0),
-      pagesRead: values.pagesRead,
+      pagesRead: values.isFinished ? values.totalPages : values.pagesRead,
       authors: authorsFormatted,
+      isFinished: values.isFinished || values.pagesRead == values.totalPages,
     };
 
     //if book is being edited, update it otherwise create a new one
@@ -83,7 +91,7 @@ export default function BookEditorScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, themedContainer]}>
       {book && book?.action !== "edit" && (
         <BookResult {...book} previewOnly={true} />
       )}
@@ -95,6 +103,7 @@ export default function BookEditorScreen({ route, navigation }) {
           notes: book?.notes || "",
           pagesRead: book?.pagesRead || 0,
           totalPages: book?.pages ? `${book?.pages}` : "",
+          isFinished: book?.isFinished || false,
         }}
         validationSchema={BookSchema}
         onSubmit={onPress}
@@ -112,10 +121,16 @@ export default function BookEditorScreen({ route, navigation }) {
               <>
                 <TextInput
                   onChangeText={handleChange("title")}
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    color: scheme === "dark" ? colors.white : colors.black,
+                  }}
                   value={values.title}
                   placeholder="Title"
                   maxLength={500}
+                  placeholderTextColor={
+                    scheme === "dark" ? colors.white : colors.lightGray
+                  }
                 />
                 {errors.title && touched.title && (
                   <Text style={styles.error}>{errors.title}</Text>
@@ -126,10 +141,16 @@ export default function BookEditorScreen({ route, navigation }) {
             {(!book?.authors || book?.action === "edit") && (
               <TextInput
                 onChangeText={handleChange("authors")}
-                style={styles.input}
+                style={{
+                  ...styles.input,
+                  color: scheme === "dark" ? colors.white : colors.black,
+                }}
                 value={values.authors}
                 placeholder="Authors seperated by commas"
                 maxLength={500}
+                placeholderTextColor={
+                  scheme === "dark" ? colors.white : colors.lightGray
+                }
               />
             )}
 
@@ -151,8 +172,11 @@ export default function BookEditorScreen({ route, navigation }) {
             >
               <RichEditor
                 editorStyle={{
+                  backgroundColor:
+                    scheme === "dark" ? colors.lighterBlack : colors.white,
+                  color: scheme === "dark" ? colors.white : colors.black,
                   cssText:
-                    "body { font-size: 20px; color:green; font-family: 'Helvetica Neue'; }",
+                    "body { font-size: 18px; font-family: 'Helvetica Neue'; }",
                 }}
                 placeholder="Write your notes here..."
                 ref={editorRef}
@@ -168,23 +192,56 @@ export default function BookEditorScreen({ route, navigation }) {
                 onChangeText={(value) => {
                   setFieldValue("totalPages", value.replace(/[^0-9]/g, ""));
                 }}
-                style={styles.input}
+                style={{
+                  ...styles.input,
+                  color: scheme === "dark" ? colors.white : colors.black,
+                }}
                 value={values.totalPages}
                 placeholder="Total Pages"
+                placeholderTextColor={
+                  scheme === "dark" ? colors.white : colors.lightGray
+                }
               />
             )}
-            <Text style={styles.pagesText}>{`Your Progress (${
-              values.pagesRead
-            } out of ${values.totalPages || 0} pages)`}</Text>
-            <Slider
-              containerStyle={styles.sliderContainer}
-              onValueChange={(value) => setFieldValue("pagesRead", value)}
-              value={values.pagesRead}
-              minimumValue={0}
-              maximumValue={values.totalPages || 0}
-              step={1}
-              thumbTintColor="#63dcb8"
-            />
+            <View style={styles.finishedContainer}>
+              <Text
+                style={{
+                  ...styles.pagesText,
+                  color: scheme === "dark" ? colors.white : colors.lightGray,
+                }}
+              >
+                Did you finish this book?
+              </Text>
+              <Checkbox
+                style={styles.checkbox}
+                value={values.isFinished}
+                onValueChange={() =>
+                  setFieldValue("isFinished", !values.isFinished)
+                }
+                color={values.isFinished ? colors.lightGreen : undefined}
+              />
+            </View>
+            {!values.isFinished && (
+              <>
+                <Text
+                  style={{
+                    ...styles.pagesText,
+                    color: scheme === "dark" ? colors.white : colors.lightGray,
+                  }}
+                >{`Your Progress (${values.pagesRead} out of ${
+                  values.totalPages || 0
+                } pages)`}</Text>
+                <Slider
+                  containerStyle={styles.sliderContainer}
+                  onValueChange={(value) => setFieldValue("pagesRead", value)}
+                  value={values.pagesRead}
+                  minimumValue={0}
+                  maximumValue={values.totalPages || 0}
+                  step={1}
+                  thumbTintColor="#63dcb8"
+                />
+              </>
+            )}
 
             <Button
               title={book?.action === "edit" ? "Update Book" : "Save Book"}
@@ -218,9 +275,8 @@ const styles = StyleSheet.create({
   },
 
   pagesText: {
-    color: "gray",
-    marginVertical: 10,
-    fontSize: 19,
+    marginVertical: 20,
+    fontSize: 22,
     fontFamily: "Jost_400Regular",
   },
   error: {
@@ -236,5 +292,12 @@ const styles = StyleSheet.create({
   richEditor: {
     fontSize: 19,
     fontFamily: "Jost_400Regular",
+  },
+  finishedContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkbox: {
+    marginLeft: 10,
   },
 });

@@ -9,10 +9,13 @@ import { Ionicons, Foundation } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../contexts/AuthContext";
+import { useColorScheme } from "react-native";
+import { colors, getThemedStyles } from "../../themesStyles";
 
 export default function AddButton() {
   const navigation = useNavigation();
+  const scheme = useColorScheme();
+  const { themedHeader, themedContainer, themedText } = getThemedStyles(scheme);
 
   const onSearchBook = () => {
     navigation.replace("Home", {
@@ -33,37 +36,39 @@ export default function AddButton() {
     <View style={styles.container}>
       <Menu>
         <MenuTrigger customStyles={styles.text}>
-          <Text style={styles.text}>Add </Text>
+          <Text style={[styles.text, themedHeader]}>Add </Text>
         </MenuTrigger>
         <MenuOptions
           customStyles={{
-            optionWrapper: styles.optionWrapper,
+            optionWrapper: [styles.optionWrapper, themedContainer],
           }}
         >
           <MenuOption onSelect={onSearchBook}>
-            <Text style={styles.optionText}>Search Book</Text>
+            <Text style={[styles.optionText, themedText]}>Search Book</Text>
             <Ionicons
               name="search-outline"
               size={16}
-              color={"black"}
+              color={scheme === "dark" ? colors.white : colors.black}
               style={styles.optionIcon}
             />
           </MenuOption>
           <MenuOption onSelect={onScanBook}>
-            <Text style={styles.optionText}>Scan Book</Text>
+            <Text style={[styles.optionText, themedText]}>Scan Book</Text>
             <MaterialCommunityIcons
               style={styles.optionIcon}
               name="barcode-scan"
               size={16}
-              color="black"
+              color={scheme === "dark" ? colors.white : colors.black}
             />
           </MenuOption>
           <MenuOption onSelect={onAdddManuallyBook}>
-            <Text style={styles.optionText}>Manually Add Book</Text>
+            <Text style={[styles.optionText, themedText]}>
+              Manually Add Book
+            </Text>
             <MaterialCommunityIcons
               name="typewriter"
               size={16}
-              color="black"
+              color={scheme === "dark" ? colors.white : colors.black}
               style={styles.optionIcon}
             />
           </MenuOption>
@@ -71,11 +76,11 @@ export default function AddButton() {
             onSelect={() => alert(`Delete`)}
             style={styles.menuOption}
           >
-            <Text style={styles.optionText}>Add List</Text>
+            <Text style={[styles.optionText, themedText]}>Add List</Text>
             <FontAwesome5
               name="clipboard-list"
               size={16}
-              color="black"
+              color={scheme === "dark" ? colors.white : colors.black}
               style={styles.optionIcon}
             />
           </MenuOption>
@@ -87,7 +92,6 @@ export default function AddButton() {
 
 const styles = StyleSheet.create({
   text: {
-    color: "#1F3D35",
     fontSize: 17,
     fontFamily: "Jost_700Bold",
     marginRight: 20,
@@ -99,7 +103,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    // marginLeft: 5,
+    // backgroundColor: "black",
   },
 
   optionText: {

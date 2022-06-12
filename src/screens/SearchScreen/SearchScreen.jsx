@@ -11,11 +11,15 @@ import { FlatList } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import useSearchBooks from "./useSearchBooks";
 import SearchIlustration from "@res/icons/girl.svg";
+import { useColorScheme } from "react-native";
+import { getThemedStyles } from "../../themesStyles";
 
-export default function SearchScreen({ route }) {
+export default function SearchScreen() {
   const [search, setSearch] = useState("");
   const inputElement = useRef(null);
   const { state, searchBooks, loadMoreBooks } = useSearchBooks();
+  const scheme = useColorScheme();
+  const { themedContainer, themedHeader } = getThemedStyles(scheme);
 
   const onSubmit = () => {
     searchBooks(search);
@@ -34,7 +38,7 @@ export default function SearchScreen({ route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themedContainer]}>
       <TextInput
         onChangeText={(text) => setSearch(text)}
         style={styles.input}
@@ -45,7 +49,7 @@ export default function SearchScreen({ route }) {
         ref={inputElement}
       />
 
-      <Text style={styles.title}>
+      <Text style={[styles.title, themedHeader]}>
         {state.textSearched && `Results for "${state.textSearched}" `}
       </Text>
 
@@ -67,7 +71,9 @@ export default function SearchScreen({ route }) {
             width={400}
             height={300}
           />
-          <Text style={styles.startText}>Powered By Google</Text>
+          <Text style={[styles.startText, themedHeader]}>
+            Powered By Google
+          </Text>
         </View>
       )}
       {state.isLoadingMore && <ActivityIndicator size={30} />}
@@ -95,7 +101,6 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "#1F3D35",
     fontSize: 19,
     fontFamily: "Jost_700Bold",
     marginLeft: 14,
@@ -110,7 +115,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
   },
   startText: {
     color: "#1F3D35",

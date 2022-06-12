@@ -6,12 +6,16 @@ import DisplayBook from "../../components/DisplayBook/DisplayBook";
 import DisplayList from "../../components/DisplayList/DisplayList";
 import firestore from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
+import { getThemedStyles } from "../../themesStyles";
+import { useColorScheme } from "react-native";
 
 export default function LibraryScreen() {
   const { currentUser } = useContext(AuthContext);
   const [tab, setTab] = useState("books");
   const [data, setData] = useState([]);
   const navigation = useNavigation();
+  const scheme = useColorScheme();
+  const { themedContainer, themedHeader } = getThemedStyles(scheme);
 
   useEffect(() => {
     const getData = async () => {
@@ -44,6 +48,7 @@ export default function LibraryScreen() {
           action: "edit",
           id: book.id,
           notes: book.notes,
+          isFinished: book.isFinished,
         },
       },
     });
@@ -57,27 +62,40 @@ export default function LibraryScreen() {
         authors={book.item.authors}
         pagesRead={book.item.pagesRead || 0}
         pagesTotal={book.item.totalPages}
+        isFinished={book.item.isFinished}
       />
     </Pressable>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, themedContainer]}>
       <View style={styles.tabs}>
         <Pressable onPress={() => handleTabPress("books")}>
-          <Text style={tab === "books" ? styles.activeTab : styles.inactiveTab}>
+          <Text
+            style={
+              tab === "books"
+                ? [styles.activeTab, themedHeader]
+                : styles.inactiveTab
+            }
+          >
             Books
           </Text>
         </Pressable>
         <Pressable onPress={() => handleTabPress("lists")}>
-          <Text style={tab === "lists" ? styles.activeTab : styles.inactiveTab}>
+          <Text
+            style={
+              tab === "lists"
+                ? [styles.activeTab, themedHeader]
+                : styles.inactiveTab
+            }
+          >
             Lists
           </Text>
         </Pressable>
       </View>
       <View style={styles.tabContent}>
         {tab === "books" && (
-          <View style={styles.books}>
+          <View>
             <FlatList
               style={styles.list}
               data={data}
@@ -88,7 +106,7 @@ export default function LibraryScreen() {
         )}
         {tab === "lists" && (
           <View>
-            <DisplayList name="Books you’ve read" />
+            <DisplayList name="Books you’ve read" id="readList" />
             <DisplayList name="To read later" />
             <DisplayList name="Favorites" />
           </View>
@@ -114,7 +132,6 @@ const styles = StyleSheet.create({
   },
 
   activeTab: {
-    color: "#1F3D35",
     fontSize: 21,
     fontFamily: "Jost_700Bold",
     marginRight: 20,
@@ -125,8 +142,5 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontFamily: "Jost_700Bold",
     marginRight: 20,
-  },
-  books: {
-    // flexDirection:'column'
   },
 });

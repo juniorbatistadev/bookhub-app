@@ -3,11 +3,15 @@ import { Text, View, StyleSheet, Button, Alert } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { getBookByCode } from "../../utils/booksApi";
 import { useNavigation } from "@react-navigation/native";
+import { useColorScheme } from "react-native";
+import { getThemedStyles } from "../../themesStyles";
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const navigation = useNavigation();
+  const scheme = useColorScheme();
+  const { themedText, themedContainer } = getThemedStyles(useColorScheme());
 
   useEffect(() => {
     (async () => {
@@ -50,15 +54,19 @@ export default function App() {
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return (
+      <Text style={[styles.text, themedText]}>
+        Requesting for camera permission
+      </Text>
+    );
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text style={[styles.text, themedText]}>No access to camera</Text>;
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
+    <View style={[styles.container, themedContainer]}>
+      <Text style={[styles.text, themedText]}>
         Point the camera to your book's barcode and make sure is focused.
       </Text>
       <BarCodeScanner
@@ -85,7 +93,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   container: {
-    backgroundColor: "#fff",
     width: "100%",
     height: "100%",
   },

@@ -3,6 +3,8 @@ import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import RenderHtml from "react-native-render-html";
 import DefaultCover from "@res/images/defaultCover.png";
 import { useNavigation } from "@react-navigation/native";
+import { useColorScheme } from "react-native";
+import { getThemedStyles } from "../../themesStyles";
 
 function BookResult({
   title,
@@ -13,6 +15,8 @@ function BookResult({
   previewOnly,
 }) {
   const navigation = useNavigation();
+  const scheme = useColorScheme();
+  const { themedHeader } = getThemedStyles(scheme);
 
   const onPress = () => {
     navigation.push("Home", {
@@ -44,7 +48,7 @@ function BookResult({
         )}
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.detailsTitle}>{title}</Text>
+          <Text style={[styles.detailsTitle, themedHeader]}>{title}</Text>
           <Text style={styles.detailsAuthor}>
             {authors ? `${authors.join("   ")} ` : "Unknown"}
           </Text>
@@ -76,7 +80,6 @@ const styles = StyleSheet.create({
   },
 
   detailsTitle: {
-    color: "#1F3D35",
     fontSize: 19,
     fontFamily: "Jost_500Medium",
   },

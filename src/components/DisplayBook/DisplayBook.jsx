@@ -1,8 +1,19 @@
 import React from "react";
 import { Text, View, Image, StyleSheet } from "react-native";
 import defaultCover from "@res/images/defaultCover.png";
+import { useColorScheme } from "react-native";
+import { getThemedStyles } from "../../themesStyles";
 
-function DisplayBook({ title, authors, image, pagesRead = 0, pagesTotal }) {
+function DisplayBook({
+  title,
+  authors,
+  image,
+  pagesRead = 0,
+  pagesTotal,
+  isFinished,
+}) {
+  const scheme = useColorScheme();
+  const { themedHeader } = getThemedStyles(scheme);
   return (
     <View style={styles.container}>
       <Image
@@ -10,21 +21,23 @@ function DisplayBook({ title, authors, image, pagesRead = 0, pagesTotal }) {
         source={image ? { uri: image } : defaultCover}
       />
       <View style={styles.detailsContainer}>
-        <Text style={styles.detailsTitle}>{title}</Text>
+        <Text style={[styles.detailsTitle, themedHeader]}>{title}</Text>
         <Text style={styles.detailsAuthor}>
           {authors ? `${authors.join("   ")} ` : "Unknown"}
         </Text>
         <Text style={styles.detailsPages}>
-          {pagesRead === pagesTotal ? "Finished" : `${pagesRead}/${pagesTotal}`}
+          {isFinished ? "Finished" : `${pagesRead}/${pagesTotal}`}
         </Text>
-        <View style={styles.barBG}>
-          <View
-            style={{
-              ...styles.bar,
-              width: `${(pagesRead / pagesTotal) * 100}%`,
-            }}
-          ></View>
-        </View>
+        {Number.parseInt(pagesTotal) > 0 && (
+          <View style={styles.barBG}>
+            <View
+              style={{
+                ...styles.bar,
+                width: `${(pagesRead / pagesTotal) * 100}%`,
+              }}
+            ></View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -49,7 +62,6 @@ const styles = StyleSheet.create({
   },
 
   detailsTitle: {
-    color: "#1F3D35",
     fontSize: 18,
     fontFamily: "Jost_700Bold",
   },
