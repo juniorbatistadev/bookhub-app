@@ -5,7 +5,8 @@ import LibraryScreen from "@screens/LibraryScreen/LibraryScreen";
 import SearchScreen from "@screens/SearchScreen/SearchScreen";
 import AccountScreen from "@screens/AccountScreen/AccountScreen";
 import AddButton from "@components/AddButton/AddButton";
-import AddNewBookScreen from "../AddNewBookScreen/AddNewBookScreen";
+import AddNewBookScreen from "@screens/AddNewBookScreen/AddNewBookScreen";
+import ScanBookScreen from "@screens/ScanBookScreen/ScanBookScreen";
 
 export default function HomeScreen() {
   const Tab = createBottomTabNavigator();
@@ -60,7 +61,16 @@ export default function HomeScreen() {
         }}
         name="AddBook"
         component={AddNewBookScreen}
+
         // options={{ tabBarLabel: "Add Book", headerTitle: "Add Book" }}
+      />
+      <Tab.Screen
+        name="ScanBook"
+        options={{
+          headerTitle: "Scan Book",
+          tabBarButton: () => null,
+        }}
+        component={ScanBookScreen}
       />
     </Tab.Navigator>
   );

@@ -9,6 +9,7 @@ import { Ionicons, Foundation } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export default function AddButton() {
   const navigation = useNavigation();
@@ -24,6 +25,10 @@ export default function AddButton() {
     navigation.push("Home", { screen: "AddBook" });
   };
 
+  const onScanBook = () => {
+    navigation.push("Home", { screen: "ScanBook" });
+  };
+
   return (
     <View style={styles.container}>
       <Menu>
@@ -37,21 +42,19 @@ export default function AddButton() {
         >
           <MenuOption onSelect={onSearchBook}>
             <Text style={styles.optionText}>Search Book</Text>
-            <View style={styles.optionIcon}>
-              <Ionicons
-                name="search-outline"
-                size={20}
-                color={"black"}
-                style={styles.optionIcon}
-              />
-            </View>
+            <Ionicons
+              name="search-outline"
+              size={16}
+              color={"black"}
+              style={styles.optionIcon}
+            />
           </MenuOption>
-          <MenuOption onSelect={() => alert(`Delete`)}>
+          <MenuOption onSelect={onScanBook}>
             <Text style={styles.optionText}>Scan Book</Text>
             <MaterialCommunityIcons
               style={styles.optionIcon}
               name="barcode-scan"
-              size={20}
+              size={16}
               color="black"
             />
           </MenuOption>
@@ -59,16 +62,19 @@ export default function AddButton() {
             <Text style={styles.optionText}>Manually Add Book</Text>
             <MaterialCommunityIcons
               name="typewriter"
-              size={20}
+              size={16}
               color="black"
               style={styles.optionIcon}
             />
           </MenuOption>
-          <MenuOption onSelect={() => alert(`Delete`)}>
+          <MenuOption
+            onSelect={() => alert(`Delete`)}
+            style={styles.menuOption}
+          >
             <Text style={styles.optionText}>Add List</Text>
             <FontAwesome5
               name="clipboard-list"
-              size={20}
+              size={16}
               color="black"
               style={styles.optionIcon}
             />
@@ -102,7 +108,17 @@ const styles = StyleSheet.create({
     fontFamily: "Jost_500Medium",
   },
 
+  // menuOption: {
+  //   flex: 1,
+  // },
+
   optionIcon: {
-    alignSelf: "flex-end",
+    flex: 1,
+    alignItems: "center",
+    marginLeft: 10,
+    position: "absolute",
+    right: 15,
+
+    // alignSelf: "flex-end",
   },
 });

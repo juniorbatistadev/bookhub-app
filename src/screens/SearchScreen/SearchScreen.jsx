@@ -17,12 +17,6 @@ export default function SearchScreen({ route }) {
   const inputElement = useRef(null);
   const { state, searchBooks, loadMoreBooks } = useSearchBooks();
 
-  // useFocusEffect(() => {
-  //   if (inputElement.current && route.params?.focusOnSearch) {
-  //     inputElement.current.focus();
-  //   }
-  // });
-
   const onSubmit = () => {
     searchBooks(search);
   };
@@ -49,7 +43,6 @@ export default function SearchScreen({ route }) {
         onSubmitEditing={onSubmit}
         value={search}
         ref={inputElement}
-        // autoFocus={route.params?.focusOnSearch}
       />
 
       <Text style={styles.title}>
@@ -74,7 +67,7 @@ export default function SearchScreen({ route }) {
             width={400}
             height={300}
           />
-          {/* <Text style={styles.startText}>Let's Find Your Books!</Text> */}
+          <Text style={styles.startText}>Powered By Google</Text>
         </View>
       )}
       {state.isLoadingMore && <ActivityIndicator size={30} />}
@@ -121,8 +114,8 @@ const styles = StyleSheet.create({
   },
   startText: {
     color: "#1F3D35",
-    fontSize: 19,
+    fontSize: 17,
     fontFamily: "Jost_500Medium",
-    marginTop: 40,
+    marginTop: 30,
   },
 });
