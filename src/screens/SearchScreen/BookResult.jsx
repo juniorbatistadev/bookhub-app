@@ -4,7 +4,14 @@ import RenderHtml from "react-native-render-html";
 import DefaultCover from "@res/images/defaultCover.png";
 import { useNavigation } from "@react-navigation/native";
 
-function BookResult({ title, authors, image, textSnippet, pages }) {
+function BookResult({
+  title,
+  authors,
+  image,
+  textSnippet,
+  pages,
+  previewOnly,
+}) {
   const navigation = useNavigation();
 
   const onPress = () => {
@@ -23,7 +30,7 @@ function BookResult({ title, authors, image, textSnippet, pages }) {
   };
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={previewOnly ? null : onPress}>
       <View style={styles.container}>
         {image ? (
           <Image

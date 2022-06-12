@@ -5,7 +5,7 @@ import LibraryScreen from "@screens/LibraryScreen/LibraryScreen";
 import SearchScreen from "@screens/SearchScreen/SearchScreen";
 import AccountScreen from "@screens/AccountScreen/AccountScreen";
 import AddButton from "@components/AddButton/AddButton";
-import AddNewBookScreen from "@screens/AddNewBookScreen/AddNewBookScreen";
+import BookEditorScreen from "@screens/BookEditorScreen/BookEditorScreen";
 import ScanBookScreen from "@screens/ScanBookScreen/ScanBookScreen";
 
 export default function HomeScreen() {
@@ -56,13 +56,10 @@ export default function HomeScreen() {
       />
       <Tab.Screen
         options={{
-          headerTitle: "Add Book",
           tabBarButton: () => null,
         }}
         name="AddBook"
-        component={AddNewBookScreen}
-
-        // options={{ tabBarLabel: "Add Book", headerTitle: "Add Book" }}
+        component={BookEditorScreen}
       />
       <Tab.Screen
         name="ScanBook"

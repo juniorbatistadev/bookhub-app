@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     marginBottom: 26,
+    width: "100%",
   },
 
   cover: {
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
   },
 
   detailsContainer: {
+    flex: 1,
     flexDirection: "column",
     marginLeft: 25,
   },

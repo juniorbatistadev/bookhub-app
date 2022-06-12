@@ -21,6 +21,7 @@ import {
   RichToolbar,
 } from "react-native-pell-rich-editor";
 import * as Yup from "yup";
+import { useEffect } from "react";
 
 const BookSchema = Yup.object().shape({
   title: Yup.string().required("Please provide a title").max(500),
@@ -31,26 +32,21 @@ const BookSchema = Yup.object().shape({
   image: Yup.string(),
 });
 
-const getAuthors = (authors, book) => {
-  if (book?.authors) {
-    return book.authors;
-  } else if (authors) {
-    return authors.split(",");
-  }
-
-  return null;
-};
-
-export default function AddNewBookScreen(params) {
+export default function BookEditorScreen({ route, navigation }) {
   const { currentUser } = useContext(AuthContext);
   const editorRef = useRef();
 
-  const book = params?.route?.params?.book;
+  const book = route?.params?.book;
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: book?.action === "edit" ? "Update Book" : "Add Book",
+    });
+  }, []);
 
   const onPress = (values) => {
     const { authors } = values;
-
-    const authorsFormatted = getAuthors(authors, book);
+    const authorsFormatted = authors.split(",");
 
     //validate pages read are less than total pages
     if (values.pagesRead[0] > values.totalPages) {
@@ -66,29 +62,39 @@ export default function AddNewBookScreen(params) {
       .doc(currentUser.uid)
       .collection("Books");
 
-    booksDocument
-      .add({
-        ...values,
-        totalPages: Number.parseInt(values.totalPages || 0),
-        pagesRead: values.pagesRead[0] || 0,
-        authors: authorsFormatted,
-      })
-      .then(() => {
+    const data = {
+      ...values,
+      totalPages: Number.parseInt(values.totalPages || 0),
+      pagesRead: values.pagesRead,
+      authors: authorsFormatted,
+    };
+
+    //if book is being edited, update it otherwise create a new one
+    if (book?.action === "edit") {
+      booksDocument
+        .doc(book?.id)
+        .update(data)
+        .then(() => alert("Book updated"));
+    } else {
+      booksDocument.add(data).then(() => {
         alert("next");
       });
+    }
   };
 
   return (
     <ScrollView style={styles.container}>
-      {book && <BookResult {...book} />}
+      {book && book?.action !== "edit" && (
+        <BookResult {...book} previewOnly={true} />
+      )}
       <Formik
         initialValues={{
           title: book?.title || "",
-          authors: "",
+          authors: book?.authors ? book.authors.join(" , ") : "",
           cover: book?.image || null,
-          notes: "",
-          pagesRead: 0,
-          totalPages: book?.pages || "",
+          notes: book?.notes || "",
+          pagesRead: book?.pagesRead || 0,
+          totalPages: book?.pages ? `${book?.pages}` : "",
         }}
         validationSchema={BookSchema}
         onSubmit={onPress}
@@ -102,7 +108,7 @@ export default function AddNewBookScreen(params) {
           errors,
         }) => (
           <View>
-            {!book?.title && (
+            {(!book?.title || book?.action === "edit") && (
               <>
                 <TextInput
                   onChangeText={handleChange("title")}
@@ -117,7 +123,7 @@ export default function AddNewBookScreen(params) {
               </>
             )}
 
-            {!book?.authors && (
+            {(!book?.authors || book?.action === "edit") && (
               <TextInput
                 onChangeText={handleChange("authors")}
                 style={styles.input}
@@ -152,10 +158,11 @@ export default function AddNewBookScreen(params) {
                 ref={editorRef}
                 onChange={(value) => setFieldValue("notes", value)}
                 initialHeight={100}
+                initialContentHTML={book?.notes || ""}
               />
             </KeyboardAvoidingView>
 
-            {!book?.pages && (
+            {(!book?.pages || book?.action === "edit") && (
               <TextInput
                 keyboardType="numeric"
                 onChangeText={(value) => {
@@ -179,7 +186,11 @@ export default function AddNewBookScreen(params) {
               thumbTintColor="#63dcb8"
             />
 
-            <Button title="Save Book" onPress={handleSubmit} color="#63dcb8" />
+            <Button
+              title={book?.action === "edit" ? "Update Book" : "Save Book"}
+              onPress={handleSubmit}
+              color="#63dcb8"
+            />
           </View>
         )}
       </Formik>

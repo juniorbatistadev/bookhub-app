@@ -16,7 +16,7 @@ export default function App() {
     })();
   }, []);
 
-  const handleBarCodeScanned = async ({ type, data }) => {
+  const handleBarCodeScanned = async ({ data }) => {
     setScanned(true);
     const result = await getBookByCode(data);
     if (result) {

@@ -27,15 +27,6 @@ export const getBookByCode = async (code) => {
   const result = await fetch(url)
     .then((e) => e.json())
     .then((data) => {
-      console.log(data, "data");
-      // let books = [];
-      // if (data.items.length > 0) {
-      //   data.items.forEach((book) => {
-      //     books.push(book);
-      //   });
-      // }
-
-      // console.log(books);
       const result = data.totalItems > 0 ? data.items[0] : null;
       return result;
     });
