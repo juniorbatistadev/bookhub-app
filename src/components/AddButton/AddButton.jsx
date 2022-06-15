@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  Alert,
+} from "react-native";
 import {
   Menu,
   MenuOptions,
@@ -11,11 +18,19 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useColorScheme } from "react-native";
 import { colors, getThemedStyles } from "../../themesStyles";
+import CustomModal from "@components/CustomModal/CustomModal";
+import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
+import firestore from "@react-native-firebase/firestore";
 
 export default function AddButton() {
   const navigation = useNavigation();
   const scheme = useColorScheme();
   const { themedHeader, themedContainer, themedText } = getThemedStyles(scheme);
+  const [showAddListModal, setShowAddListModal] = useState(false);
+  const [listName, setListName] = useState("");
+  const { currentUser } = useContext(AuthContext);
 
   const onSearchBook = () => {
     navigation.replace("Home", {
@@ -32,8 +47,45 @@ export default function AddButton() {
     navigation.push("Home", { screen: "ScanBook" });
   };
 
+  const onAddList = async () => {
+    if (listName.length < 1) {
+      Alert.alert("Oops", "Please enter a list name");
+      return;
+    }
+
+    const listCollection = firestore()
+      .collection("Users")
+      .doc(currentUser.uid)
+      .collection("Lists");
+
+    listCollection.add({ listName }).then(() => {
+      setListName("");
+      setShowAddListModal(false);
+    });
+  };
+
   return (
     <View style={styles.container}>
+      <CustomModal
+        isVisible={showAddListModal}
+        title="Add List"
+        cancelInfo={{
+          text: "Cancel",
+          handleCancel: () => setShowAddListModal(false),
+        }}
+        confirmInfo={{
+          text: "Add",
+          handleConfirm: onAddList,
+        }}
+      >
+        <TextInput
+          onChangeText={setListName}
+          value={listName}
+          placeholderTextColor={colors.lightGray}
+          placeholder="List Name"
+          style={{ width: "100%", marginTop: 10, ...themedText }}
+        />
+      </CustomModal>
       <Menu>
         <MenuTrigger customStyles={styles.text}>
           <Text style={[styles.text, themedHeader]}>Add </Text>
@@ -73,7 +125,7 @@ export default function AddButton() {
             />
           </MenuOption>
           <MenuOption
-            onSelect={() => alert(`Delete`)}
+            onSelect={() => setShowAddListModal(true)}
             style={styles.menuOption}
           >
             <Text style={[styles.optionText, themedText]}>Add List</Text>

@@ -38,7 +38,8 @@
     "react-native-webview": "11.18.1",
     "yup": "^0.32.11",
     "expo-barcode-scanner": "~11.3.0",
-    "expo-checkbox": "~2.1.0"
+    "expo-checkbox": "~2.1.0",
+    "@react-native-picker/picker": "2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

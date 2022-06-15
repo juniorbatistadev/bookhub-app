@@ -5,15 +5,26 @@ import { MenuProvider } from "react-native-popup-menu";
 import { useColorScheme } from "react-native";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import App from "./App";
+import { colors } from "./src/themesStyles";
 
 const RootComponent = () => {
   const scheme = useColorScheme();
 
-  console.log(DarkTheme);
+  const customLightTheme = {
+    ...DefaultTheme,
+    colors: { background: colors.white },
+  };
+
+  const customDarkTheme = {
+    ...DarkTheme,
+    colors: { background: colors.lighterBlack },
+  };
 
   return (
     <AuthProvider>
-      <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
+      <NavigationContainer
+        theme={scheme === "dark" ? customDarkTheme : customLightTheme}
+      >
         <MenuProvider>
           <App />
         </MenuProvider>

@@ -1,71 +1,36 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { AuthContext } from "../../contexts/AuthContext";
-import React, { useContext, useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
-import DisplayBook from "../../components/DisplayBook/DisplayBook";
-import DisplayList from "../../components/DisplayList/DisplayList";
-import firestore from "@react-native-firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
 import { getThemedStyles } from "../../themesStyles";
 import { useColorScheme } from "react-native";
+import ListsTab from "./ListsTab";
+import BooksTab from "./BooksTab";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ShowListScreen from "./ShowListScreen";
 
-export default function LibraryScreen() {
-  const { currentUser } = useContext(AuthContext);
+export default function LibraryStackScreen() {
+  const LibraryStack = createNativeStackNavigator();
+
+  return (
+    <LibraryStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <LibraryStack.Screen name="LibraryHome" component={LibraryScreen} />
+      <LibraryStack.Screen name="ListScreen" component={ShowListScreen} />
+    </LibraryStack.Navigator>
+  );
+}
+
+function LibraryScreen() {
   const [tab, setTab] = useState("books");
-  const [data, setData] = useState([]);
-  const navigation = useNavigation();
   const scheme = useColorScheme();
   const { themedContainer, themedHeader } = getThemedStyles(scheme);
-
-  useEffect(() => {
-    const getData = async () => {
-      const books = await firestore()
-        .collection("Users")
-        .doc(currentUser.uid)
-        .collection("Books")
-        .get();
-
-      setData(books.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
-    getData();
-  }, []);
 
   const handleTabPress = (tab) => {
     setTab(tab);
   };
-
-  const onBookPress = (book) => {
-    navigation.push("Home", {
-      screen: "AddBook",
-      params: {
-        book: {
-          title: book.title,
-          authors: book.authors ? book.authors : null,
-          image: book.cover,
-          pages: book.totalPages,
-          pagesRead: book.pagesRead,
-          action: "edit",
-          id: book.id,
-          notes: book.notes,
-          isFinished: book.isFinished,
-        },
-      },
-    });
-  };
-
-  const renderItem = (book) => (
-    <Pressable onPress={() => onBookPress(book.item)}>
-      <DisplayBook
-        title={book.item.title}
-        image={book.item.cover}
-        authors={book.item.authors}
-        pagesRead={book.item.pagesRead || 0}
-        pagesTotal={book.item.totalPages}
-        isFinished={book.item.isFinished}
-      />
-    </Pressable>
-  );
 
   return (
     <View style={[styles.container, themedContainer]}>
@@ -94,23 +59,8 @@ export default function LibraryScreen() {
         </Pressable>
       </View>
       <View style={styles.tabContent}>
-        {tab === "books" && (
-          <View>
-            <FlatList
-              style={styles.list}
-              data={data}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => item.title + index}
-            />
-          </View>
-        )}
-        {tab === "lists" && (
-          <View>
-            <DisplayList name="Books you’ve read" id="readList" />
-            <DisplayList name="To read later" />
-            <DisplayList name="Favorites" />
-          </View>
-        )}
+        {tab === "books" && <BooksTab />}
+        {tab === "lists" && <ListsTab />}
       </View>
     </View>
   );
@@ -142,5 +92,13 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontFamily: "Jost_700Bold",
     marginRight: 20,
+  },
+  title: {
+    fontSize: 29,
+    fontFamily: "Jost_700Bold",
+  },
+  header: {
+    height: 130,
+    backgroundColor: "#fff",
   },
 });

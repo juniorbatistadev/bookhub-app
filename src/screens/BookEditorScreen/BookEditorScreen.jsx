@@ -25,6 +25,7 @@ import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { colors, getThemedStyles } from "../../themesStyles";
 import Checkbox from "expo-checkbox";
+import ActionsButtonsEditor from "./ActionsButtonsEditor";
 
 const BookSchema = Yup.object().shape({
   title: Yup.string().required("Please provide a title").max(500),
@@ -39,19 +40,24 @@ export default function BookEditorScreen({ route, navigation }) {
   const { currentUser } = useContext(AuthContext);
   const editorRef = useRef();
   const scheme = useColorScheme();
-  const { themedContainer, themedText } = getThemedStyles(scheme);
+  const { themedContainer } = getThemedStyles(scheme);
 
   const book = route?.params?.book;
 
   useEffect(() => {
     navigation.setOptions({
       title: book?.action === "edit" ? "Update Book" : "Add Book",
+      headerRight: () => (
+        <>
+          {book?.action === "edit" && (
+            <ActionsButtonsEditor book={book} test="testing" />
+          )}
+        </>
+      ),
     });
   }, []);
 
   const onPress = (values) => {
-    console.log(values);
-
     const { authors } = values;
     const authorsFormatted = authors.split(",");
 
@@ -82,10 +88,10 @@ export default function BookEditorScreen({ route, navigation }) {
       booksDocument
         .doc(book?.id)
         .update(data)
-        .then(() => alert("Book updated"));
+        .then(() => navigation.navigate("Library"));
     } else {
       booksDocument.add(data).then(() => {
-        alert("next");
+        navigation.navigate("Library");
       });
     }
   };
@@ -299,5 +305,9 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     marginLeft: 10,
+  },
+  richToolbar: {
+    backgroundColor: "transparent",
+    color: "white",
   },
 });

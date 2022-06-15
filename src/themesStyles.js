@@ -54,5 +54,9 @@ export const getThemedStyles = (scheme) => {
       scheme === "dark"
         ? themesStyles.darkThemeText
         : themesStyles.lightThemeText,
+    themedBackground:
+      scheme === "dark"
+        ? themesStyles.darkContainer
+        : themesStyles.lightContainer,
   };
 };

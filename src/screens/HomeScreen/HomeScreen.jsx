@@ -85,12 +85,6 @@ const styles = StyleSheet.create({
   header: {
     height: 130,
   },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
   tabBarStyle: {
     elevation: 0,
