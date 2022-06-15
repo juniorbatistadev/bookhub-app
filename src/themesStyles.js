@@ -10,6 +10,7 @@ export const colors = {
 
 export const sizes = {
   m: 18,
+  l: 24,
 };
 
 export const themesStyles = {

@@ -1,45 +1,72 @@
 import React from "react";
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import defaultCover from "@res/images/defaultCover.png";
 import { useColorScheme } from "react-native";
 import { getThemedStyles } from "../../themesStyles";
+import { useNavigation } from "@react-navigation/native";
 
-function DisplayBook({
-  title,
-  authors,
-  image,
-  pagesRead = 0,
-  pagesTotal,
-  isFinished,
-}) {
+function DisplayBook({ book }) {
   const scheme = useColorScheme();
   const { themedHeader } = getThemedStyles(scheme);
+  const {
+    id,
+    title,
+    authors,
+    cover,
+    pagesRead = 0,
+    totalPages,
+    isFinished,
+    notes,
+  } = book;
+  const navigation = useNavigation();
+
+  const onBookPress = () => {
+    navigation.push("Home", {
+      screen: "AddBook",
+      params: {
+        book: {
+          title: title,
+          authors: authors ? authors : null,
+          image: cover,
+          pages: totalPages,
+          pagesRead: pagesRead,
+          action: "edit",
+          id: id,
+          notes: notes,
+          isFinished: isFinished,
+        },
+      },
+    });
+  };
+
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.cover}
-        source={image ? { uri: image } : defaultCover}
-      />
-      <View style={styles.detailsContainer}>
-        <Text style={[styles.detailsTitle, themedHeader]}>{title}</Text>
-        <Text style={styles.detailsAuthor}>
-          {authors ? `${authors.join("   ")} ` : "Unknown"}
-        </Text>
-        <Text style={styles.detailsPages}>
-          {isFinished ? "Finished" : `${pagesRead}/${pagesTotal}`}
-        </Text>
-        {Number.parseInt(pagesTotal) > 0 && (
-          <View style={styles.barBG}>
-            <View
-              style={{
-                ...styles.bar,
-                width: `${(pagesRead / pagesTotal) * 100}%`,
-              }}
-            ></View>
-          </View>
-        )}
+    <Pressable onPress={onBookPress}>
+      <View style={styles.container}>
+        <Image
+          style={styles.cover}
+          source={cover ? { uri: cover } : defaultCover}
+        />
+        <View style={styles.detailsContainer}>
+          <Text style={[styles.detailsTitle, themedHeader]}>{title}</Text>
+          <Text style={styles.detailsAuthor}>
+            {authors ? `${authors.join("   ")} ` : "Unknown"}
+          </Text>
+          <Text style={styles.detailsPages}>
+            {isFinished ? "Finished" : `${pagesRead}/${totalPages}`}
+          </Text>
+          {Number.parseInt(totalPages) > 0 && (
+            <View style={styles.barBG}>
+              <View
+                style={{
+                  ...styles.bar,
+                  width: `${(pagesRead / totalPages) * 100}%`,
+                }}
+              ></View>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

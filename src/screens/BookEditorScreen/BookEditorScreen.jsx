@@ -85,15 +85,12 @@ export default function BookEditorScreen({ route, navigation }) {
 
     //if book is being edited, update it otherwise create a new one
     if (book?.action === "edit") {
-      booksDocument
-        .doc(book?.id)
-        .update(data)
-        .then(() => navigation.navigate("Library"));
+      booksDocument.doc(book?.id).update(data);
     } else {
-      booksDocument.add(data).then(() => {
-        navigation.navigate("Library");
-      });
+      booksDocument.add(data);
     }
+
+    navigation.navigate("Library");
   };
 
   return (

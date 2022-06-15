@@ -17,45 +17,20 @@ function BooksTab() {
         .collection("Users")
         .doc(currentUser.uid)
         .collection("Books")
-        .get();
+        .onSnapshot((querySnapshot) => {
+          const books = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
 
-      setData(books.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+          setData(books);
+        });
     };
 
     getData();
   }, []);
 
-  const onBookPress = (book) => {
-    navigation.push("Home", {
-      screen: "AddBook",
-      params: {
-        book: {
-          title: book.title,
-          authors: book.authors ? book.authors : null,
-          image: book.cover,
-          pages: book.totalPages,
-          pagesRead: book.pagesRead,
-          action: "edit",
-          id: book.id,
-          notes: book.notes,
-          isFinished: book.isFinished,
-        },
-      },
-    });
-  };
-
-  const renderItem = (book) => (
-    <Pressable onPress={() => onBookPress(book.item)}>
-      <DisplayBook
-        title={book.item.title}
-        image={book.item.cover}
-        authors={book.item.authors}
-        pagesRead={book.item.pagesRead || 0}
-        pagesTotal={book.item.totalPages}
-        isFinished={book.item.isFinished}
-      />
-    </Pressable>
-  );
+  const renderItem = (book) => <DisplayBook book={book.item} />;
 
   return (
     <View>

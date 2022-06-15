@@ -1,6 +1,6 @@
 import React from "react";
-import { FlatList, Text, View } from "react-native";
-import { getThemedStyles } from "../../themesStyles";
+import { FlatList, StyleSheet, Text, View } from "react-native";
+import { getThemedStyles, sizes } from "../../themesStyles";
 import { useColorScheme } from "react-native";
 import { useEffect } from "react";
 import firestore from "@react-native-firebase/firestore";
@@ -24,13 +24,11 @@ function ShowListScreen({ route }) {
 
   useEffect(() => {
     const getReadBooks = async () => {
-      console.log("asd");
       await firestore()
         .collection("Users")
         .doc(currentUser.uid)
         .collection("Books")
         .where("isFinished", "==", true)
-        .limit(10)
         .get()
         .then((querySnapshot) => {
           setBooks(querySnapshot.docs.map((doc) => doc.data()));
@@ -44,7 +42,6 @@ function ShowListScreen({ route }) {
         .doc(currentUser.uid)
         .collection("Books")
         .where("lists", "array-contains", "readLater")
-        .limit(10)
         .get()
         .then((querySnapshot) => {
           setBooks(querySnapshot.docs.map((doc) => doc.data()));
@@ -53,8 +50,16 @@ function ShowListScreen({ route }) {
     };
 
     const getBookByListId = async () => {
-      setBooks(list?.data.books);
-      setIsLoading(false);
+      await firestore()
+        .collection("Users")
+        .doc(currentUser.uid)
+        .collection("Books")
+        .where("lists", "array-contains", list.id)
+        .get()
+        .then((querySnapshot) => {
+          setBooks(querySnapshot.docs.map((doc) => doc.data()));
+          setIsLoading(false);
+        });
     };
 
     if (list.id === "readList") {
@@ -70,22 +75,13 @@ function ShowListScreen({ route }) {
     }
   }, []);
 
-  const renderItem = (book) => (
-    <DisplayBook
-      title={book.item.title}
-      image={book.item.cover}
-      authors={book.item.authors}
-      pagesRead={book.item.pagesRead || 0}
-      pagesTotal={book.item.totalPages}
-      isFinished={book.item.isFinished}
-    />
-  );
-
-  console.log(books);
+  const renderItem = (book) => <DisplayBook book={book.item} />;
 
   return (
-    <View>
-      <Text style={themedText}>{list?.data.listName}</Text>
+    <View style={styles.container}>
+      <Text style={{ fontSize: sizes.l, ...styles.title, ...themedText }}>
+        {list?.data.listName}
+      </Text>
 
       <FlatList
         data={books}
@@ -95,5 +91,18 @@ function ShowListScreen({ route }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontFamily: "Jost_700Bold",
+    marginBottom: 20,
+  },
+  container: {
+    flex: 1,
+    paddingVertical: 0,
+    backgroundColor: "#fff",
+    paddingHorizontal: 15,
+  },
+});
 
 export default ShowListScreen;

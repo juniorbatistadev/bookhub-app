@@ -127,7 +127,7 @@ function DisplayList({ name, id, data }) {
       </Pressable>
       {isLoading ? (
         <ActivityIndicator />
-      ) : books.length > 0 ? (
+      ) : books?.length > 0 ? (
         <FlatList
           style={styles.list}
           horizontal
