@@ -1,12 +1,15 @@
 import React from "react";
 import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import defaultCover from "@res/images/defaultCover.png";
-import { getThemedStyles } from "../../themesStyles";
+import { getThemedStyles } from "@/themesStyles";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
-import { PreferencesContext } from "../../contexts/PreferencesContext";
+import { PreferencesContext } from "@/contexts/PreferencesContext";
+import firestore from "@react-native-firebase/firestore";
+import { AuthContext } from "@/contexts/AuthContext";
+import i18n from "i18n-js";
 
-function DisplayBook({ book }) {
+function DisplayBook({ book, displayOnList, list }) {
   const { theme } = useContext(PreferencesContext);
   const { themedHeader } = getThemedStyles(theme.name);
   const {
@@ -20,24 +23,54 @@ function DisplayBook({ book }) {
     notes,
   } = book;
   const navigation = useNavigation();
+  const { currentUser } = useContext(AuthContext);
 
   const onBookPress = () => {
     navigation.push("Home", {
       screen: "AddBook",
       params: {
         book: {
+          ...book,
           title: title,
           authors: authors ? authors : null,
           image: cover,
           pages: totalPages,
           pagesRead: pagesRead,
           action: "edit",
-          id: id,
+          id,
           notes: notes,
           isFinished: isFinished,
         },
       },
     });
+  };
+
+  const onRemoveFromList = async () => {
+    //remove book from list
+    console.log(currentUser.uid, id, list);
+
+    await firestore()
+      .collection("Users")
+      .doc(currentUser.uid)
+      .collection("Books")
+      .doc(id)
+      .update({
+        lists: firestore.FieldValue.arrayRemove(list),
+      });
+
+    if (list !== "readLater") {
+      await firestore()
+        .collection("Users")
+        .doc(currentUser.uid)
+        .collection("Lists")
+        .doc(list)
+        .update({
+          books: firestore.FieldValue.arrayRemove({
+            cover,
+            title,
+          }),
+        });
+    }
   };
 
   return (
@@ -68,6 +101,13 @@ function DisplayBook({ book }) {
                 }}
               ></View>
             </View>
+          )}
+          {displayOnList && (
+            <Pressable onPress={onRemoveFromList}>
+              <Text style={styles.removeText}>
+                {i18n.t("library.removeFromList")}
+              </Text>
+            </Pressable>
           )}
         </View>
       </View>
@@ -120,6 +160,13 @@ const styles = StyleSheet.create({
     height: 7,
     borderRadius: 100,
     backgroundColor: "#63dcb8",
+  },
+  removeText: {
+    color: "#BFBFBF",
+    fontSize: 14,
+    fontFamily: "Jost_700Bold",
+    // marginTop: 1,
+    paddingVertical: 10,
   },
 });
 

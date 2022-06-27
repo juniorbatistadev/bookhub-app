@@ -7,8 +7,8 @@ import AccountScreen from "@screens/AccountScreen/AccountScreen";
 import AddButton from "@components/AddButton/AddButton";
 import BookEditorScreen from "@screens/BookEditorScreen/BookEditorScreen";
 import ScanBookScreen from "@screens/ScanBookScreen/ScanBookScreen";
-import { colors, getThemedStyles } from "../../themesStyles";
-import { PreferencesContext } from "../../contexts/PreferencesContext";
+import { colors, getThemedStyles } from "@/themesStyles";
+import { PreferencesContext } from "@/contexts/PreferencesContext";
 import { useContext } from "react";
 import i18n from "i18n-js";
 

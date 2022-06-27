@@ -37,10 +37,13 @@ function DisplayList({ name, id, data }) {
         .collection("Books")
         .where("isFinished", "==", true)
         .limit(10)
-        .get()
-        .then((querySnapshot) => {
-          setBooks(querySnapshot.docs.map((doc) => doc.data()));
+        .onSnapshot((querySnapshot) => {
+          const books = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
           setIsLoading(false);
+          setBooks(books);
         });
     };
 
@@ -51,10 +54,13 @@ function DisplayList({ name, id, data }) {
         .collection("Books")
         .where("lists", "array-contains", "readLater")
         .limit(10)
-        .get()
-        .then((querySnapshot) => {
-          setBooks(querySnapshot.docs.map((doc) => doc.data()));
+        .onSnapshot((querySnapshot) => {
+          const books = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
           setIsLoading(false);
+          setBooks(books);
         });
     };
 

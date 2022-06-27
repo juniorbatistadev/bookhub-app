@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import auth from "@react-native-firebase/auth";
-import { Pressable, Image, Button } from "react-native";
+import { Pressable, Image } from "react-native";
 import { useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
-import { colors, getThemedStyles, sizes } from "../../themesStyles";
+import { AuthContext } from "@/contexts/AuthContext";
+import { colors, getThemedStyles, sizes } from "@/themesStyles";
 import { Picker } from "@react-native-picker/picker";
-import { PreferencesContext } from "../../contexts/PreferencesContext";
+import { PreferencesContext } from "@/contexts/PreferencesContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18n from "i18n-js";
 import { useEffect } from "react";

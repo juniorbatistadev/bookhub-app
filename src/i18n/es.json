@@ -40,7 +40,10 @@
     "booksYouFinished": "Libros Que Terminaste",
     "toReadLater": "Para Leer Despues",
     "noBooksAdded": "No se ha agregado ningun libro",
-    "seeList": "Ver lista"
+    "seeList": "Ver lista",
+
+    "removeFromList":"Remover de la lista"
+
 
   }
   ,

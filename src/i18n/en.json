@@ -39,7 +39,9 @@
     "booksYouFinished": "Books You've Finished",
     "toReadLater": "To Read Later",
     "noBooksAdded": "No Books Added",
-    "seeList": "See List"
+    "seeList": "See List",
+
+    "removeFromList":"Remove from list"
 
 
   },

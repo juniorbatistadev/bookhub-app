@@ -46,10 +46,13 @@ function ShowListScreen({ route }) {
         .doc(currentUser.uid)
         .collection("Books")
         .where("lists", "array-contains", "readLater")
-        .get()
-        .then((querySnapshot) => {
-          setBooks(querySnapshot.docs.map((doc) => doc.data()));
+        .onSnapshot((querySnapshot) => {
+          const books = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
           setIsLoading(false);
+          setBooks(books);
         });
     };
 
@@ -59,10 +62,13 @@ function ShowListScreen({ route }) {
         .doc(currentUser.uid)
         .collection("Books")
         .where("lists", "array-contains", list.id)
-        .get()
-        .then((querySnapshot) => {
-          setBooks(querySnapshot.docs.map((doc) => doc.data()));
+        .onSnapshot((querySnapshot) => {
+          const books = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
           setIsLoading(false);
+          setBooks(books);
         });
     };
 
@@ -79,7 +85,9 @@ function ShowListScreen({ route }) {
     }
   }, []);
 
-  const renderItem = (book) => <DisplayBook book={book.item} />;
+  const renderItem = (book) => (
+    <DisplayBook book={book.item} displayOnList={true} list={list.id} />
+  );
 
   return (
     <View style={styles.container}>

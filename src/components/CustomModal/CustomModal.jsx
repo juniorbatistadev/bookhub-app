@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { PreferencesContext } from "../../contexts/PreferencesContext";
-import { colors, getThemedStyles, sizes } from "../../themesStyles";
+import { PreferencesContext } from "@/contexts/PreferencesContext";
+import { colors, getThemedStyles, sizes } from "@/themesStyles";
 
 function CustomModal({ isVisible, title, children, cancelInfo, confirmInfo }) {
   const { theme } = useContext(PreferencesContext);

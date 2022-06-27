@@ -23,7 +23,7 @@ function ActionsButtonsEditor({ book }) {
   const navigation = useNavigation();
 
   const handleAdd = async () => {
-    const { id, authors, image, isFinished, title } = book;
+    const { id, image, title } = book;
 
     //Add to list to book
     await firestore()
@@ -44,9 +44,7 @@ function ActionsButtonsEditor({ book }) {
         .doc(selectedList)
         .update({
           books: firestore.FieldValue.arrayUnion({
-            authors,
             cover: image,
-            isFinished,
             title,
           }),
         });
@@ -73,11 +71,31 @@ function ActionsButtonsEditor({ book }) {
               .collection("Books")
               .doc(book.id)
               .delete();
+
+            removeBookFromLists();
             navigation.goBack();
           },
         },
       ]
     );
+  };
+
+  const removeBookFromLists = async (list) => {
+    if (Array.isArray(book.lists)) {
+      for (list of book.lists) {
+        await firestore()
+          .collection("Users")
+          .doc(currentUser.uid)
+          .collection("Lists")
+          .doc(list)
+          .update({
+            books: firestore.FieldValue.arrayRemove({
+              cover: book.image,
+              title: book.title,
+            }),
+          });
+      }
+    }
   };
 
   useEffect(() => {
