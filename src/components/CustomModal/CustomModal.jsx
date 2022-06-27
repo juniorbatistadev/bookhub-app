@@ -1,10 +1,11 @@
+import { useContext } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { useColorScheme } from "react-native";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
 import { colors, getThemedStyles, sizes } from "../../themesStyles";
 
 function CustomModal({ isVisible, title, children, cancelInfo, confirmInfo }) {
-  const scheme = useColorScheme();
-  const { themedHeader, themedContainer } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedHeader, themedContainer } = getThemedStyles(theme.name);
 
   return (
     <Modal
@@ -28,7 +29,7 @@ function CustomModal({ isVisible, title, children, cancelInfo, confirmInfo }) {
                   ...styles.textStyle,
                   fontSize: sizes.m,
                   color:
-                    scheme === "dark" ? colors.lightGray : colors.lightGray,
+                    theme.name === "dark" ? colors.lightGray : colors.lightGray,
                 }}
               >
                 {cancelInfo.text}
@@ -42,7 +43,8 @@ function CustomModal({ isVisible, title, children, cancelInfo, confirmInfo }) {
                 style={{
                   ...styles.textStyle,
                   fontSize: sizes.m,
-                  color: scheme === "dark" ? colors.white : colors.darkGreen,
+                  color:
+                    theme.name === "dark" ? colors.white : colors.darkGreen,
                 }}
               >
                 {confirmInfo.text}

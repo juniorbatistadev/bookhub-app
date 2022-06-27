@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { getBookByCode } from "../../utils/booksApi";
 import { useNavigation } from "@react-navigation/native";
-import { useColorScheme } from "react-native";
 import { getThemedStyles } from "../../themesStyles";
+import { useContext } from "react";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
+import i18n from "i18n-js";
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const navigation = useNavigation();
-  const scheme = useColorScheme();
-  const { themedText, themedContainer } = getThemedStyles(useColorScheme());
+  const { theme } = useContext(PreferencesContext);
+  const { themedText, themedContainer } = getThemedStyles(theme.name);
 
   useEffect(() => {
     (async () => {
@@ -36,38 +38,38 @@ export default function App() {
         },
       });
     } else {
-      Alert.alert(
-        "Oh no!",
-        "We couldn't find this book, try adding it manually.",
-        [
-          {
-            text: "Try Again",
-            onPress: () => setScanned(false),
-          },
-          {
-            text: "Add Manually",
-            onPress: () => navigation.push("Home", { screen: "AddBook" }),
-          },
-        ]
-      );
+      Alert.alert("Oh no!", i18n.t("scanBook.noFound"), [
+        {
+          text: i18n.t("misc.tryAgain"),
+          onPress: () => setScanned(false),
+        },
+        {
+          text: i18n.t("scanBook.addManually"),
+          onPress: () => navigation.push("Home", { screen: "AddBook" }),
+        },
+      ]);
     }
   };
 
   if (hasPermission === null) {
     return (
       <Text style={[styles.text, themedText]}>
-        Requesting for camera permission
+        {i18n.t("scanBook.requestingPermission")}
       </Text>
     );
   }
   if (hasPermission === false) {
-    return <Text style={[styles.text, themedText]}>No access to camera</Text>;
+    return (
+      <Text style={[styles.text, themedText]}>
+        {i18n.t("scanBook.noAccesCamera")}
+      </Text>
+    );
   }
 
   return (
     <View style={[styles.container, themedContainer]}>
       <Text style={[styles.text, themedText]}>
-        Point the camera to your book's barcode and make sure is focused.
+        {i18n.t("scanBook.helpText")}
       </Text>
       <BarCodeScanner
         barCodeTypes={[

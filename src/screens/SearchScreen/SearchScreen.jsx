@@ -8,18 +8,19 @@ import {
 import { useState, useRef } from "react";
 import BookResult from "./BookResult";
 import { FlatList } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
 import useSearchBooks from "./useSearchBooks";
 import SearchIlustration from "@res/icons/girl.svg";
-import { useColorScheme } from "react-native";
 import { getThemedStyles } from "../../themesStyles";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
+import { useContext } from "react";
+import i18n from "i18n-js";
 
 export default function SearchScreen() {
   const [search, setSearch] = useState("");
   const inputElement = useRef(null);
   const { state, searchBooks, loadMoreBooks } = useSearchBooks();
-  const scheme = useColorScheme();
-  const { themedContainer, themedHeader } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedContainer, themedHeader } = getThemedStyles(theme.name);
 
   const onSubmit = () => {
     searchBooks(search);
@@ -42,7 +43,7 @@ export default function SearchScreen() {
       <TextInput
         onChangeText={(text) => setSearch(text)}
         style={styles.input}
-        placeholder="Book title, author etc."
+        placeholder={i18n.t("search.searchInput")}
         returnKeyType="search"
         onSubmitEditing={onSubmit}
         value={search}
@@ -50,7 +51,8 @@ export default function SearchScreen() {
       />
 
       <Text style={[styles.title, themedHeader]}>
-        {state.textSearched && `Results for "${state.textSearched}" `}
+        {state.textSearched &&
+          i18n.t("search.resultsFor", { param: state.textSearched })}
       </Text>
 
       {state.isLoading ? (
@@ -72,7 +74,7 @@ export default function SearchScreen() {
             height={300}
           />
           <Text style={[styles.startText, themedHeader]}>
-            Powered By Google
+            {i18n.t("search.poweredByGoogle")}
           </Text>
         </View>
       )}
@@ -84,7 +86,6 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
 
   list: {

@@ -1,26 +1,30 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { getThemedStyles, sizes } from "../../themesStyles";
-import { useColorScheme } from "react-native";
 import { useEffect } from "react";
 import firestore from "@react-native-firebase/firestore";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import DisplayBook from "../../components/DisplayBook/DisplayBook";
-import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
 
 function ShowListScreen({ route }) {
   const list = route?.params?.list;
 
-  const scheme = useColorScheme();
-  const { themedText } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedText } = getThemedStyles(theme.name);
 
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const { currentUser } = useContext(AuthContext);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const getReadBooks = async () => {
@@ -70,7 +74,7 @@ function ShowListScreen({ route }) {
       getReadLaterBooks();
     }
 
-    if (list.id !== "readList" && id !== "readLater") {
+    if (list.id !== "readList" && list.id !== "readLater") {
       getBookByListId();
     }
   }, []);
@@ -82,12 +86,15 @@ function ShowListScreen({ route }) {
       <Text style={{ fontSize: sizes.l, ...styles.title, ...themedText }}>
         {list?.data.listName}
       </Text>
-
-      <FlatList
-        data={books}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => item.title + index}
-      />
+      {isLoading ? (
+        <ActivityIndicator />
+      ) : (
+        <FlatList
+          data={books}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => item.title + index}
+        />
+      )}
     </View>
   );
 }
@@ -100,7 +107,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 0,
-    backgroundColor: "#fff",
     paddingHorizontal: 15,
   },
 });

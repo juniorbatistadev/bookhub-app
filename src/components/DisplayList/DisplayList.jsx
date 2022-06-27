@@ -8,7 +8,6 @@ import {
   Pressable,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-import { useColorScheme } from "react-native";
 import { colors, getThemedStyles, sizes } from "../../themesStyles";
 import { useEffect } from "react";
 import firestore from "@react-native-firebase/firestore";
@@ -18,13 +17,15 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import defaultCover from "@res/images/defaultCover.png";
 import { useNavigation } from "@react-navigation/native";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
+import i18n from "i18n-js";
 
 function DisplayList({ name, id, data }) {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const scheme = useColorScheme();
-  const { themedHeader, themedText } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedHeader, themedText } = getThemedStyles(theme.name);
   const { currentUser } = useContext(AuthContext);
   const navigation = useNavigation();
 
@@ -92,7 +93,7 @@ function DisplayList({ name, id, data }) {
               }
             >
               <Text style={[{ fontFamily: "Jost_700Bold" }, themedText]}>
-                See List
+                {i18n.t("library.seeList")}
               </Text>
             </Pressable>
           </View>
@@ -110,6 +111,7 @@ function DisplayList({ name, id, data }) {
     <View style={styles.container}>
       <Pressable
         onPress={() =>
+          books?.length > 0 &&
           navigation.navigate("ListScreen", { list: { name, id, data } })
         }
       >
@@ -121,7 +123,7 @@ function DisplayList({ name, id, data }) {
             name="right"
             size={13}
             style={styles.icon}
-            color={scheme === "dark" ? colors.white : colors.darkGreen}
+            color={theme.name === "dark" ? colors.white : colors.darkGreen}
           />
         </View>
       </Pressable>
@@ -136,7 +138,7 @@ function DisplayList({ name, id, data }) {
           keyExtractor={(item, index) => item.title + index}
         />
       ) : (
-        <Text style={themedText}>No books have been added. </Text>
+        <Text style={themedText}>{i18n.t("library.noBooksAdded")} </Text>
       )}
     </View>
   );

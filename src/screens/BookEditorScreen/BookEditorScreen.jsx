@@ -22,10 +22,11 @@ import {
 } from "react-native-pell-rich-editor";
 import * as Yup from "yup";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
 import { colors, getThemedStyles } from "../../themesStyles";
 import Checkbox from "expo-checkbox";
 import ActionsButtonsEditor from "./ActionsButtonsEditor";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
+import i18n from "i18n-js";
 
 const BookSchema = Yup.object().shape({
   title: Yup.string().required("Please provide a title").max(500),
@@ -39,20 +40,19 @@ const BookSchema = Yup.object().shape({
 export default function BookEditorScreen({ route, navigation }) {
   const { currentUser } = useContext(AuthContext);
   const editorRef = useRef();
-  const scheme = useColorScheme();
-  const { themedContainer } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedContainer } = getThemedStyles(theme.name);
 
   const book = route?.params?.book;
 
   useEffect(() => {
     navigation.setOptions({
-      title: book?.action === "edit" ? "Update Book" : "Add Book",
+      title:
+        book?.action === "edit"
+          ? i18n.t("library.updateBook")
+          : i18n.t("library.addBook"),
       headerRight: () => (
-        <>
-          {book?.action === "edit" && (
-            <ActionsButtonsEditor book={book} test="testing" />
-          )}
-        </>
+        <>{book?.action === "edit" && <ActionsButtonsEditor book={book} />}</>
       ),
     });
   }, []);
@@ -63,10 +63,7 @@ export default function BookEditorScreen({ route, navigation }) {
 
     //validate pages read are less than total pages
     if (values.pagesRead[0] > values.totalPages) {
-      Alert.alert(
-        "Oh no!",
-        "Amount of pages read must be less than total pages"
-      );
+      Alert.alert("Oh no!", i18n.t("library.readPageError"));
       return;
     }
 
@@ -80,14 +77,20 @@ export default function BookEditorScreen({ route, navigation }) {
       totalPages: Number.parseInt(values.totalPages || 0),
       pagesRead: values.isFinished ? values.totalPages : values.pagesRead,
       authors: authorsFormatted,
-      isFinished: values.isFinished || values.pagesRead == values.totalPages,
+      isFinished:
+        values.isFinished || values.pagesRead > 0
+          ? values.pagesRead == values.totalPages
+          : false,
     };
 
     //if book is being edited, update it otherwise create a new one
     if (book?.action === "edit") {
       booksDocument.doc(book?.id).update(data);
     } else {
-      booksDocument.add(data);
+      booksDocument.add({
+        ...data,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
     }
 
     navigation.navigate("Library");
@@ -126,13 +129,13 @@ export default function BookEditorScreen({ route, navigation }) {
                   onChangeText={handleChange("title")}
                   style={{
                     ...styles.input,
-                    color: scheme === "dark" ? colors.white : colors.black,
+                    color: theme.name === "dark" ? colors.white : colors.black,
                   }}
                   value={values.title}
-                  placeholder="Title"
+                  placeholder={i18n.t("misc.title")}
                   maxLength={500}
                   placeholderTextColor={
-                    scheme === "dark" ? colors.white : colors.lightGray
+                    theme.name === "dark" ? colors.white : colors.lightGray
                   }
                 />
                 {errors.title && touched.title && (
@@ -146,13 +149,13 @@ export default function BookEditorScreen({ route, navigation }) {
                 onChangeText={handleChange("authors")}
                 style={{
                   ...styles.input,
-                  color: scheme === "dark" ? colors.white : colors.black,
+                  color: theme.name === "dark" ? colors.white : colors.black,
                 }}
                 value={values.authors}
-                placeholder="Authors seperated by commas"
+                placeholder={i18n.t("library.authorsByCommas")}
                 maxLength={500}
                 placeholderTextColor={
-                  scheme === "dark" ? colors.white : colors.lightGray
+                  theme.name === "dark" ? colors.white : colors.lightGray
                 }
               />
             )}
@@ -176,12 +179,12 @@ export default function BookEditorScreen({ route, navigation }) {
               <RichEditor
                 editorStyle={{
                   backgroundColor:
-                    scheme === "dark" ? colors.lighterBlack : colors.white,
-                  color: scheme === "dark" ? colors.white : colors.black,
+                    theme.name === "dark" ? colors.lighterBlack : colors.white,
+                  color: theme.name === "dark" ? colors.white : colors.black,
                   cssText:
                     "body { font-size: 18px; font-family: 'Helvetica Neue'; }",
                 }}
-                placeholder="Write your notes here..."
+                placeholder={i18n.t("library.notesHere")}
                 ref={editorRef}
                 onChange={(value) => setFieldValue("notes", value)}
                 initialHeight={100}
@@ -197,12 +200,12 @@ export default function BookEditorScreen({ route, navigation }) {
                 }}
                 style={{
                   ...styles.input,
-                  color: scheme === "dark" ? colors.white : colors.black,
+                  color: theme.name === "dark" ? colors.white : colors.black,
                 }}
                 value={values.totalPages}
                 placeholder="Total Pages"
                 placeholderTextColor={
-                  scheme === "dark" ? colors.white : colors.lightGray
+                  theme.name === "dark" ? colors.white : colors.lightGray
                 }
               />
             )}
@@ -210,10 +213,11 @@ export default function BookEditorScreen({ route, navigation }) {
               <Text
                 style={{
                   ...styles.pagesText,
-                  color: scheme === "dark" ? colors.white : colors.lightGray,
+                  color:
+                    theme.name === "dark" ? colors.white : colors.lightGray,
                 }}
               >
-                Did you finish this book?
+                {i18n.t("library.didFinishBook")}
               </Text>
               <Checkbox
                 style={styles.checkbox}
@@ -229,11 +233,15 @@ export default function BookEditorScreen({ route, navigation }) {
                 <Text
                   style={{
                     ...styles.pagesText,
-                    color: scheme === "dark" ? colors.white : colors.lightGray,
+                    color:
+                      theme.name === "dark" ? colors.white : colors.lightGray,
                   }}
-                >{`Your Progress (${values.pagesRead} out of ${
-                  values.totalPages || 0
-                } pages)`}</Text>
+                >
+                  {i18n.t("library.progressPages", {
+                    pagesRead: values.pagesRead,
+                    totalPages: values.totalPages || 0,
+                  })}
+                </Text>
                 <Slider
                   containerStyle={styles.sliderContainer}
                   onValueChange={(value) => setFieldValue("pagesRead", value)}
@@ -247,7 +255,11 @@ export default function BookEditorScreen({ route, navigation }) {
             )}
 
             <Button
-              title={book?.action === "edit" ? "Update Book" : "Save Book"}
+              title={
+                book?.action === "edit"
+                  ? i18n.t("library.updateBook")
+                  : i18n.t("library.saveBook")
+              }
               onPress={handleSubmit}
               color="#63dcb8"
             />

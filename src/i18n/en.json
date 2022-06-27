@@ -1,0 +1,73 @@
+{
+  "misc":{
+    "title":"Title",
+    "add":"Add",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "yes":"Yes",
+    "tryAgain":"Try Again"
+
+
+  },
+
+  "library": {
+    "title": "Library",
+    "books": "Books",
+    "lists": "Lists",
+
+    "addBook": "Add Book",
+    "updateBook": "Update Book",
+
+    "readPagesError": "Amount of pages read must be less than total pages",
+    "authorsByCommas":"Authors seperated by commas",
+    "notesHere":"Write your notes here...",
+    "didFinishBook":"Did you finish this book?",
+    "progressPages": "Your Progress (%{pagesRead} out of %{totalPages} pages)",
+    "saveBook": "Save Book",
+
+    "searchBook": "Search Book",
+    "scanBook": "Scan Book",
+    "manualBook": "Manually add book",
+    "addList": "Add List",
+    "listName": "List Name",
+
+    "deleteBookConfirm": "Are you sure you want to delete this book?",
+    "chooseList": "Choose List",
+
+    "readLater": "Read Later",
+
+    "booksYouFinished": "Books You've Finished",
+    "toReadLater": "To Read Later",
+    "noBooksAdded": "No Books Added",
+    "seeList": "See List"
+
+
+  },
+  "search":{
+    "title":"Find Books",
+    "searchInput":"Book title, author etc.",
+    "resultsFor":"Resultados para '%{param}'",
+    "poweredByGoogle":"Powered by Google"
+
+  },
+  "account":{
+    "title":"Account",
+    "theme":"Theme",
+    "language":"Language",
+    "logOut":"Log Out",
+    "autoDetect":"Auto Detect",
+    "dark":"Dark",
+    "light":"Light"
+
+  },
+
+  "scanBook":{
+    "title":"Scan Book",
+    "helpText":"Point the camera to your book's barcode and make sure is focused.",
+    "noAccessCamera":"No access to camera",
+    "requestPermission":"Request permission for camera",
+    "noFound":"We couldn't find this book, try adding it manually.",
+    "addManually":"Add Manually"
+  }
+  
+}

@@ -2,11 +2,13 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import { getThemedStyles } from "../../themesStyles";
-import { useColorScheme } from "react-native";
+import i18n from "i18n-js";
 import ListsTab from "./ListsTab";
 import BooksTab from "./BooksTab";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ShowListScreen from "./ShowListScreen";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
+import { useContext } from "react";
 
 export default function LibraryStackScreen() {
   const LibraryStack = createNativeStackNavigator();
@@ -25,8 +27,8 @@ export default function LibraryStackScreen() {
 
 function LibraryScreen() {
   const [tab, setTab] = useState("books");
-  const scheme = useColorScheme();
-  const { themedContainer, themedHeader } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedContainer, themedHeader } = getThemedStyles(theme.name);
 
   const handleTabPress = (tab) => {
     setTab(tab);
@@ -43,7 +45,7 @@ function LibraryScreen() {
                 : styles.inactiveTab
             }
           >
-            Books
+            {i18n.t("library.books")}
           </Text>
         </Pressable>
         <Pressable onPress={() => handleTabPress("lists")}>
@@ -54,7 +56,7 @@ function LibraryScreen() {
                 : styles.inactiveTab
             }
           >
-            Lists
+            {i18n.t("library.lists")}
           </Text>
         </Pressable>
       </View>
@@ -69,7 +71,6 @@ function LibraryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     paddingLeft: 15,
   },
 
@@ -92,13 +93,5 @@ const styles = StyleSheet.create({
     fontSize: 21,
     fontFamily: "Jost_700Bold",
     marginRight: 20,
-  },
-  title: {
-    fontSize: 29,
-    fontFamily: "Jost_700Bold",
-  },
-  header: {
-    height: 130,
-    backgroundColor: "#fff",
   },
 });

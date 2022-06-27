@@ -1,0 +1,74 @@
+ {
+
+  "misc":{
+    "title":"Titulo",
+    "add":"Agregar",
+    "cancel":"Cancelar",
+    "delete":"Eliminar",
+    "yes":"Si",
+    "tryAgain":"Intentar de nuevo"
+
+  },
+
+  "library": {
+    "title": "Libreria",
+    "books": "Libros",
+    "lists": "Listas",
+
+    "addBook": "Agregar libro",
+    "updateBook": "Actualizar libro",
+
+    "readPagesError": "Amount of pages read must be less than total pages",
+    "authorsByCommas":"Autores separados por comas",
+    "notesHere":"Escribe tus notas aqui...",
+    "didFinishBook":"¿Terminaste este libro?",
+    "progressPages": "Tu progreso (%{pagesRead} de %{totalPages} paginas)",
+    "saveBook": "Guardar Libro",
+
+    "searchBook": "Buscar libro",
+    "scanBook": "Escanear libro",
+    "manualBook": "Ingresar libro",
+    "addList": "Agregar lista",
+    "listName": "Nombre de la lista",
+
+    "deleteBookConfirmation":"¿Estas seguro que deseas eliminar este libro?",
+
+    "chooseList": "Elige una lista",
+
+    "readLater": "Leer mas tarde",
+
+    "booksYouFinished": "Libros Que Terminaste",
+    "toReadLater": "Para Leer Despues",
+    "noBooksAdded": "No se ha agregado ningun libro",
+    "seeList": "Ver lista"
+
+  }
+  ,
+  "search":{
+    "title":"Buscar Libros",
+    "searchInput":"Titulo, autor, ISBN",
+    "resultsFor":"Resultados para '%{param}'",
+    "poweredByGoogle":"Data Provista Por Google"
+
+  },
+
+  "account":{
+    "title":"Cuenta",
+    "theme":"Tema",
+    "language":"Idioma",
+    "logOut":"Salir",
+    "autoDetect":"Auto Detectar",
+    "dark":"Oscuro",
+    "light":"Claro"
+
+  },
+
+  "scanBook":{
+    "title":"Scanear Libro",
+    "helpText":"Escane el codigo de barras del libro",
+    "noAccessCamera":"No tienes acceso a la camara",
+    "requestPermission":"Por favor, permite el acceso a la camara",
+    "noFound":"No se encontro el libro, intenta agregarlo manualmente",
+    "addManually":"Agregar Manualmente"
+  }
+}

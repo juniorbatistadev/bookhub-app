@@ -1,13 +1,14 @@
 import React from "react";
 import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import defaultCover from "@res/images/defaultCover.png";
-import { useColorScheme } from "react-native";
 import { getThemedStyles } from "../../themesStyles";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
 
 function DisplayBook({ book }) {
-  const scheme = useColorScheme();
-  const { themedHeader } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedHeader } = getThemedStyles(theme.name);
   const {
     id,
     title,
@@ -52,7 +53,11 @@ function DisplayBook({ book }) {
             {authors ? `${authors.join("   ")} ` : "Unknown"}
           </Text>
           <Text style={styles.detailsPages}>
-            {isFinished ? "Finished" : `${pagesRead}/${totalPages}`}
+            {isFinished
+              ? "Finished"
+              : totalPages > 0
+              ? `${pagesRead}/${totalPages}`
+              : null}
           </Text>
           {Number.parseInt(totalPages) > 0 && (
             <View style={styles.barBG}>

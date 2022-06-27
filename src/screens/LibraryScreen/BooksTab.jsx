@@ -4,19 +4,19 @@ import firestore from "@react-native-firebase/firestore";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import DisplayBook from "../../components/DisplayBook/DisplayBook";
-import { useNavigation } from "@react-navigation/native";
+import FloatingIlustration from "@res/icons/floating.svg";
 
 function BooksTab() {
   const [data, setData] = useState([]);
   const { currentUser } = useContext(AuthContext);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const getData = async () => {
-      const books = await firestore()
+      await firestore()
         .collection("Users")
         .doc(currentUser.uid)
         .collection("Books")
+        .orderBy("createdAt", "desc")
         .onSnapshot((querySnapshot) => {
           const books = querySnapshot.docs.map((doc) => ({
             ...doc.data(),
@@ -33,12 +33,16 @@ function BooksTab() {
   const renderItem = (book) => <DisplayBook book={book.item} />;
 
   return (
-    <View>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => item.title + index}
-      />
+    <View style={{ justifyContent: "flex-end", alignItems: "center" }}>
+      {data.length > 0 ? (
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => item.title + index}
+        />
+      ) : (
+        <FloatingIlustration width="80%" />
+      )}
     </View>
   );
 }

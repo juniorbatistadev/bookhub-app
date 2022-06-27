@@ -6,29 +6,32 @@ import { useColorScheme } from "react-native";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import App from "./App";
 import { colors } from "./src/themesStyles";
+import { PreferencesProvider } from "./src/contexts/PreferencesContext";
 
 const RootComponent = () => {
-  const scheme = useColorScheme();
+  // const scheme = useColorScheme();
 
-  const customLightTheme = {
-    ...DefaultTheme,
-    colors: { background: colors.white },
-  };
+  // const customLightTheme = {
+  //   ...DefaultTheme,
+  //   colors: { background: colors.white },
+  // };
 
-  const customDarkTheme = {
-    ...DarkTheme,
-    colors: { background: colors.lighterBlack },
-  };
+  // const customDarkTheme = {
+  //   ...DarkTheme,
+  //   colors: { background: colors.lighterBlack },
+  // };
 
   return (
     <AuthProvider>
-      <NavigationContainer
+      <PreferencesProvider>
+        {/* <NavigationContainer
         theme={scheme === "dark" ? customDarkTheme : customLightTheme}
-      >
+      > */}
         <MenuProvider>
           <App />
         </MenuProvider>
-      </NavigationContainer>
+        {/* </NavigationContainer> */}
+      </PreferencesProvider>
     </AuthProvider>
   );
 };

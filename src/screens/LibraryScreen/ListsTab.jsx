@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import i18n from "i18n-js";
 
 function ListsTab() {
   const [lists, setLists] = useState([]);
@@ -30,12 +31,12 @@ function ListsTab() {
   return (
     <ScrollView>
       <DisplayList
-        name="Books you've finished"
+        name={i18n.t("library.booksYouFinished")}
         id="readList"
         data={{ listName: "Books you've finished" }}
       />
       <DisplayList
-        name="To read later"
+        name={i18n.t("library.toReadLater")}
         id="readLater"
         data={{ listName: "To Read Later" }}
       />

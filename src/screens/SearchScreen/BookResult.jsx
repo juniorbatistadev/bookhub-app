@@ -3,8 +3,9 @@ import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import RenderHtml from "react-native-render-html";
 import DefaultCover from "@res/images/defaultCover.png";
 import { useNavigation } from "@react-navigation/native";
-import { useColorScheme } from "react-native";
 import { getThemedStyles } from "../../themesStyles";
+import { PreferencesContext } from "../../contexts/PreferencesContext";
+import { useContext } from "react";
 
 function BookResult({
   title,
@@ -15,8 +16,8 @@ function BookResult({
   previewOnly,
 }) {
   const navigation = useNavigation();
-  const scheme = useColorScheme();
-  const { themedHeader } = getThemedStyles(scheme);
+  const { theme } = useContext(PreferencesContext);
+  const { themedHeader } = getThemedStyles(theme.name);
 
   const onPress = () => {
     navigation.push("Home", {
