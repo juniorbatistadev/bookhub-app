@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "bookhub-app",
-    "slug": "bookhub-app",
+    "name": "BookHub",
+    "slug": "bookhub-premium",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
