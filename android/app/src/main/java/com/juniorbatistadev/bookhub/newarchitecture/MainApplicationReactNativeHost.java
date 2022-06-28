@@ -1,4 +1,4 @@
-package dev.juniorbatista.bookhub.newarchitecture;
+package com.juniorbatistadev.bookhub.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import dev.juniorbatista.bookhub.BuildConfig;
-import dev.juniorbatista.bookhub.newarchitecture.components.MainComponentsRegistry;
-import dev.juniorbatista.bookhub.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.juniorbatistadev.bookhub.BuildConfig;
+import com.juniorbatistadev.bookhub.newarchitecture.components.MainComponentsRegistry;
+import com.juniorbatistadev.bookhub.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

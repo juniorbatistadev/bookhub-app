@@ -1,4 +1,4 @@
-package dev.juniorbatista.bookhub;
+package com.juniorbatistadev.bookhub;
 
 import android.os.Build;
 import android.os.Bundle;

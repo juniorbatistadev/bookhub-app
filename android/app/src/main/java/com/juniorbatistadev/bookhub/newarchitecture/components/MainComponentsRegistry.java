@@ -1,4 +1,4 @@
-package dev.juniorbatista.bookhub.newarchitecture.components;
+package com.juniorbatistadev.bookhub.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
