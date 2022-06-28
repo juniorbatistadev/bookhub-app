@@ -2,6 +2,7 @@ import React from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -14,6 +15,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import DisplayBook from "../../components/DisplayBook/DisplayBook";
 import { useState } from "react";
 import { PreferencesContext } from "../../contexts/PreferencesContext";
+import { useNavigation } from "@react-navigation/native";
 
 function ShowListScreen({ route }) {
   const list = route?.params?.list;
@@ -25,6 +27,7 @@ function ShowListScreen({ route }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const { currentUser } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getReadBooks = async () => {
@@ -85,6 +88,17 @@ function ShowListScreen({ route }) {
     }
   }, []);
 
+  const handleDelete = async () => {
+    await firestore()
+      .collection("Users")
+      .doc(currentUser.uid)
+      .collection("Lists")
+      .doc(list.id)
+      .delete();
+
+    navigation.goBack();
+  };
+
   const renderItem = (book) => (
     <DisplayBook book={book.item} displayOnList={true} list={list.id} />
   );
@@ -94,6 +108,12 @@ function ShowListScreen({ route }) {
       <Text style={{ fontSize: sizes.l, ...styles.title, ...themedText }}>
         {list?.data.listName}
       </Text>
+      {list.id !== "readList" && list.id !== "readLater" && (
+        <Pressable onPress={handleDelete}>
+          <Text style={styles.deleteText}>Delete List</Text>
+        </Pressable>
+      )}
+
       {isLoading ? (
         <ActivityIndicator />
       ) : (
@@ -110,12 +130,18 @@ function ShowListScreen({ route }) {
 const styles = StyleSheet.create({
   title: {
     fontFamily: "Jost_700Bold",
-    marginBottom: 20,
+    marginBottom: 15,
   },
   container: {
     flex: 1,
     paddingVertical: 0,
     paddingHorizontal: 15,
+  },
+  deleteText: {
+    fontFamily: "Jost_700Bold",
+    marginBottom: 30,
+    color: "gray",
+    fontSize: sizes.m,
   },
 });
 
