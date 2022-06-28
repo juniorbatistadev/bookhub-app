@@ -16,6 +16,7 @@ import DisplayBook from "../../components/DisplayBook/DisplayBook";
 import { useState } from "react";
 import { PreferencesContext } from "../../contexts/PreferencesContext";
 import { useNavigation } from "@react-navigation/native";
+import i18n from "i18n-js";
 
 function ShowListScreen({ route }) {
   const list = route?.params?.list;
@@ -110,7 +111,7 @@ function ShowListScreen({ route }) {
       </Text>
       {list.id !== "readList" && list.id !== "readLater" && (
         <Pressable onPress={handleDelete}>
-          <Text style={styles.deleteText}>Delete List</Text>
+          <Text style={styles.deleteText}>{i18n.t("library.deleteList")}</Text>
         </Pressable>
       )}
 

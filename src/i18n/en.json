@@ -41,7 +41,8 @@
     "noBooksAdded": "No Books Added",
     "seeList": "See List",
 
-    "removeFromList":"Remove from list"
+    "removeFromList":"Remove from list",
+    "deleteList":"Delete List"
 
 
   },

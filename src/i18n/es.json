@@ -42,7 +42,8 @@
     "noBooksAdded": "No se ha agregado ningun libro",
     "seeList": "Ver lista",
 
-    "removeFromList":"Remover de la lista"
+    "removeFromList":"Remover de la lista",
+    "deleteList":"Eliminar lista"
 
 
   }
