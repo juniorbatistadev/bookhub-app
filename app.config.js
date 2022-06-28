@@ -5,6 +5,7 @@ export default {
     googleBooksApiKey: "AIzaSyClppdSUc9c8d104IUfE1EQAyJrSTHPyuI",
   },
   android: {
+    versionCode: 2,
     package: "com.juniorbatistadev.bookhub",
   },
 };
