@@ -6,6 +6,6 @@ export default {
   },
   android: {
     versionCode: 2,
-    package: "com.juniorbatistadev.bookhub",
+    package: "dev.juniorbatistadev.bookhub",
   },
 };
