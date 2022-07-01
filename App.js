@@ -13,7 +13,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./src/screens/HomeScreen/HomeScreen";
 import { AuthContext } from "./src/contexts/AuthContext";
 import { NavigationContainer } from "@react-navigation/native";
-import { useColorScheme } from "react-native";
 import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { colors } from "./src/themesStyles";
 import { PreferencesContext } from "./src/contexts/PreferencesContext";
